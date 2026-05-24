@@ -9,11 +9,15 @@ import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class ForemanWorldData extends WorldSavedData {
 
     private static final String DATA_NAME = "ForemanTasks";
+
+    private static final org.apache.logging.log4j.Logger LOG =
+        org.apache.logging.log4j.LogManager.getLogger("foreman");
 
     // Insertion-ordered map for deterministic list output.
     private final Map<UUID, Task> tasks = new LinkedHashMap<>();
@@ -30,7 +34,9 @@ public class ForemanWorldData extends WorldSavedData {
 
     /** Load (or create) the data from the overworld's global map storage. */
     public static ForemanWorldData get() {
-        WorldServer overworld = MinecraftServer.getServer().worldServerForDimension(0);
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server == null) throw new IllegalStateException("ForemanWorldData.get() called on client side");
+        WorldServer overworld = server.worldServerForDimension(0);
         MapStorage storage = overworld.mapStorage;
         ForemanWorldData data = (ForemanWorldData) storage.loadData(ForemanWorldData.class, DATA_NAME);
         if (data == null) {
@@ -42,6 +48,11 @@ public class ForemanWorldData extends WorldSavedData {
 
     public Collection<Task> getAllTasks() {
         return Collections.unmodifiableCollection(tasks.values());
+    }
+
+    @Nullable
+    public Task getTask(UUID id) {
+        return tasks.get(id);
     }
 
     public void addTask(Task task) {
@@ -68,8 +79,12 @@ public class ForemanWorldData extends WorldSavedData {
         tasks.clear();
         NBTTagList list = compound.getTagList("tasks", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < list.tagCount(); i++) {
-            Task task = Task.fromNBT(list.getCompoundTagAt(i));
-            tasks.put(task.id, task);
+            try {
+                Task task = Task.fromNBT(list.getCompoundTagAt(i));
+                tasks.put(task.id, task);
+            } catch (Exception e) {
+                LOG.warn("Skipping corrupt task entry at index {}: {}", i, e.getMessage());
+            }
         }
     }
 
