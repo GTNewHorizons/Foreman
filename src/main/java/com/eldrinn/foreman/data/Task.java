@@ -69,7 +69,7 @@ public class Task {
             new UUID(tag.getLong("idMost"), tag.getLong("idLeast")),
             tag.getString("title"),
             tag.getString("description"),
-            TaskStatus.valueOf(tag.getString("status"))
+            TaskStatus.fromNBT(tag.getString("status"))
         );
 
         NBTTagList assigneeList = tag.getTagList("assignees", Constants.NBT.TAG_COMPOUND);
@@ -119,12 +119,15 @@ public class Task {
     }
 
     public static Task readFromBuf(PacketBuffer buf) throws IOException {
-        Task task = new Task(
-            new UUID(buf.readLong(), buf.readLong()),
-            buf.readStringFromBuffer(256),
-            buf.readStringFromBuffer(4096),
-            TaskStatus.values()[buf.readInt()]
-        );
+        UUID id = new UUID(buf.readLong(), buf.readLong());
+        String title = buf.readStringFromBuffer(256);
+        String description = buf.readStringFromBuffer(4096);
+        int ordinal = buf.readInt();
+        TaskStatus[] statuses = TaskStatus.values();
+        if (ordinal < 0 || ordinal >= statuses.length) throw new IOException("Invalid TaskStatus ordinal: " + ordinal);
+        TaskStatus status = statuses[ordinal];
+
+        Task task = new Task(id, title, description, status);
 
         int assigneeCount = buf.readInt();
         for (int i = 0; i < assigneeCount; i++) {
