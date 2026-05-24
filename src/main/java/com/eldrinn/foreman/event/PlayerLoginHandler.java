@@ -1,7 +1,8 @@
 package com.eldrinn.foreman.event;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 
 import com.eldrinn.foreman.network.ForemanNetwork;
 import com.eldrinn.foreman.network.SyncAllTasksPacket;
