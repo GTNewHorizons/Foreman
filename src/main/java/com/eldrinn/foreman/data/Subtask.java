@@ -1,0 +1,52 @@
+package com.eldrinn.foreman.data;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+
+import java.io.IOException;
+import java.util.UUID;
+
+public class Subtask {
+
+    public UUID id;
+    public String title;
+    public boolean checked;
+
+    public Subtask(UUID id, String title, boolean checked) {
+        this.id = id;
+        this.title = title;
+        this.checked = checked;
+    }
+
+    public NBTTagCompound toNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setLong("idMost", id.getMostSignificantBits());
+        tag.setLong("idLeast", id.getLeastSignificantBits());
+        tag.setString("title", title);
+        tag.setBoolean("checked", checked);
+        return tag;
+    }
+
+    public static Subtask fromNBT(NBTTagCompound tag) {
+        return new Subtask(
+            new UUID(tag.getLong("idMost"), tag.getLong("idLeast")),
+            tag.getString("title"),
+            tag.getBoolean("checked")
+        );
+    }
+
+    public void writeToBuf(PacketBuffer buf) throws IOException {
+        buf.writeLong(id.getMostSignificantBits());
+        buf.writeLong(id.getLeastSignificantBits());
+        buf.writeString(title);
+        buf.writeBoolean(checked);
+    }
+
+    public static Subtask readFromBuf(PacketBuffer buf) throws IOException {
+        return new Subtask(
+            new UUID(buf.readLong(), buf.readLong()),
+            buf.readStringFromBuffer(256),
+            buf.readBoolean()
+        );
+    }
+}
