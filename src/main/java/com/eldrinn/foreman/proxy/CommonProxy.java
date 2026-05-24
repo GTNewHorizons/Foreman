@@ -17,7 +17,9 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         // PlayerLoggedInEvent fires on FML's bus, not MinecraftForge.EVENT_BUS
-        FMLCommonHandler.instance().bus().register(new PlayerLoginHandler());
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new PlayerLoginHandler());
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
