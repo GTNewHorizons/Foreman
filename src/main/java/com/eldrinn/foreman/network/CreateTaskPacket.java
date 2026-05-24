@@ -31,6 +31,10 @@ public class CreateTaskPacket implements IPacket {
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         ForemanWorldData data = ForemanWorldData.get();
+        if (data.getTask(task.id) != null) {
+            // Ignore duplicate — client sent a create for an already-existing ID.
+            return null;
+        }
         data.addTask(task);
         ForemanNetwork.CHANNEL.sendToAll(new SyncAllTasksPacket(data.getAllTasks()));
         return null;

@@ -31,6 +31,10 @@ public class UpdateTaskPacket implements IPacket {
     @Override
     public IPacket executeServer(NetHandlerPlayServer handler) {
         ForemanWorldData data = ForemanWorldData.get();
+        if (data.getTask(task.id) == null) {
+            // Ignore update for non-existent task.
+            return null;
+        }
         data.updateTask(task);
         ForemanNetwork.CHANNEL.sendToAll(new SyncAllTasksPacket(data.getAllTasks()));
         return null;

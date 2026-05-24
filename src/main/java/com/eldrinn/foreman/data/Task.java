@@ -130,6 +130,7 @@ public class Task {
         Task task = new Task(id, title, description, status);
 
         int assigneeCount = buf.readInt();
+        if (assigneeCount < 0 || assigneeCount > 100) throw new IOException("Invalid assignee count: " + assigneeCount);
         for (int i = 0; i < assigneeCount; i++) {
             task.assignees.add(new UUID(buf.readLong(), buf.readLong()));
         }
@@ -139,11 +140,13 @@ public class Task {
         }
 
         int subtaskCount = buf.readInt();
+        if (subtaskCount < 0 || subtaskCount > 200) throw new IOException("Invalid subtask count: " + subtaskCount);
         for (int i = 0; i < subtaskCount; i++) {
             task.subtasks.add(Subtask.readFromBuf(buf));
         }
 
         int commentCount = buf.readInt();
+        if (commentCount < 0 || commentCount > 50) throw new IOException("Invalid comment count: " + commentCount);
         for (int i = 0; i < commentCount; i++) {
             task.comments.add(Comment.readFromBuf(buf));
         }
