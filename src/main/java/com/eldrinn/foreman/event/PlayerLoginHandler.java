@@ -1,11 +1,13 @@
 package com.eldrinn.foreman.event;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+
 import com.eldrinn.foreman.network.ForemanNetwork;
 import com.eldrinn.foreman.network.SyncAllTasksPacket;
 import com.eldrinn.foreman.storage.ForemanWorldData;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 
 public class PlayerLoginHandler {
 

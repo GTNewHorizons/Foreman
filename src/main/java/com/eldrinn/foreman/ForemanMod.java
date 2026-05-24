@@ -1,21 +1,17 @@
 package com.eldrinn.foreman;
 
-import com.eldrinn.foreman.proxy.ClientProxy;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.eldrinn.foreman.proxy.CommonProxy;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-@Mod(
-    modid = ForemanMod.MODID,
-    version = Tags.VERSION,
-    name = "Foreman",
-    acceptedMinecraftVersions = "[1.7.10]"
-)
+@Mod(modid = ForemanMod.MODID, version = Tags.VERSION, name = "Foreman", acceptedMinecraftVersions = "[1.7.10]")
 public class ForemanMod {
 
     public static final String MODID = "foreman";
@@ -23,8 +19,7 @@ public class ForemanMod {
 
     @SidedProxy(
         clientSide = "com.eldrinn.foreman.proxy.ClientProxy",
-        serverSide = "com.eldrinn.foreman.proxy.CommonProxy"
-    )
+        serverSide = "com.eldrinn.foreman.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler

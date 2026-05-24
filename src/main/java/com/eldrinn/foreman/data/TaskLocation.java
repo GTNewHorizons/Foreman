@@ -1,9 +1,9 @@
 package com.eldrinn.foreman.data;
 
+import java.io.IOException;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-
-import java.io.IOException;
 
 public class TaskLocation {
 
@@ -35,8 +35,7 @@ public class TaskLocation {
             tag.getInteger("x"),
             tag.getInteger("y"),
             tag.getInteger("z"),
-            tag.getString("label")
-        );
+            tag.getString("label"));
     }
 
     public void writeToBuf(PacketBuffer buf) throws IOException {
@@ -53,7 +52,6 @@ public class TaskLocation {
             buf.readInt(),
             buf.readInt(),
             buf.readInt(),
-            buf.readStringFromBuffer(256)
-        );
+            buf.readStringFromBuffer(256));
     }
 }

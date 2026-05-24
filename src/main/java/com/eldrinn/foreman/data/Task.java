@@ -1,15 +1,16 @@
 package com.eldrinn.foreman.data;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.Constants;
-
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.common.util.Constants;
 
 public class Task {
 
@@ -18,7 +19,8 @@ public class Task {
     public String description;
     public TaskStatus status;
     public List<UUID> assignees; // UUIDs, display names resolved on client
-    @Nullable public TaskLocation location;
+    @Nullable
+    public TaskLocation location;
     public List<Subtask> subtasks;
     public List<Comment> comments; // soft limit enforced on add: max 50
 
@@ -69,8 +71,7 @@ public class Task {
             new UUID(tag.getLong("idMost"), tag.getLong("idLeast")),
             tag.getString("title"),
             tag.getString("description"),
-            TaskStatus.fromNBT(tag.getString("status"))
-        );
+            TaskStatus.fromNBT(tag.getString("status")));
 
         NBTTagList assigneeList = tag.getTagList("assignees", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < assigneeList.tagCount(); i++) {

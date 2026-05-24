@@ -1,16 +1,17 @@
 package com.eldrinn.foreman.command;
 
-import com.eldrinn.foreman.data.Task;
-import com.eldrinn.foreman.network.ForemanNetwork;
-import com.eldrinn.foreman.network.SyncAllTasksPacket;
-import com.eldrinn.foreman.storage.ForemanWorldData;
+import java.util.Collection;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
-import java.util.Collection;
+import com.eldrinn.foreman.data.Task;
+import com.eldrinn.foreman.network.ForemanNetwork;
+import com.eldrinn.foreman.network.SyncAllTasksPacket;
+import com.eldrinn.foreman.storage.ForemanWorldData;
 
 public class ForemanCommand extends CommandBase {
 
@@ -46,10 +47,10 @@ public class ForemanCommand extends CommandBase {
                 } else {
                     for (Task t : all) {
                         // Show shortened UUID (first 8 chars) for readability.
-                        String shortId = t.id.toString().substring(0, 8);
-                        sender.addChatMessage(new ChatComponentText(
-                            String.format("[%s] %s (%s)", shortId, t.title, t.status.name())
-                        ));
+                        String shortId = t.id.toString()
+                            .substring(0, 8);
+                        sender.addChatMessage(
+                            new ChatComponentText(String.format("[%s] %s (%s)", shortId, t.title, t.status.name())));
                     }
                 }
                 break;
@@ -62,9 +63,10 @@ public class ForemanCommand extends CommandBase {
                 // Re-sends current in-memory state to all connected clients.
                 // Note: does NOT reload from disk — use server restart to pick up manual NBT edits.
                 ForemanNetwork.CHANNEL.sendToAll(new SyncAllTasksPacket(data.getAllTasks()));
-                sender.addChatMessage(new ChatComponentText(
-                    "Synced " + data.getAllTasks().size() + " tasks to all players."
-                ));
+                sender.addChatMessage(
+                    new ChatComponentText(
+                        "Synced " + data.getAllTasks()
+                            .size() + " tasks to all players."));
                 break;
             }
             default:

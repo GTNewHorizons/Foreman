@@ -1,9 +1,9 @@
 package com.eldrinn.foreman.data;
 
+import java.io.IOException;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-
-import java.io.IOException;
 
 public class Comment {
 
@@ -26,11 +26,7 @@ public class Comment {
     }
 
     public static Comment fromNBT(NBTTagCompound tag) {
-        return new Comment(
-            tag.getString("author"),
-            tag.getLong("timestamp"),
-            tag.getString("text")
-        );
+        return new Comment(tag.getString("author"), tag.getLong("timestamp"), tag.getString("text"));
     }
 
     public void writeToBuf(PacketBuffer buf) throws IOException {
@@ -40,10 +36,6 @@ public class Comment {
     }
 
     public static Comment readFromBuf(PacketBuffer buf) throws IOException {
-        return new Comment(
-            buf.readStringFromBuffer(64),
-            buf.readLong(),
-            buf.readStringFromBuffer(2048)
-        );
+        return new Comment(buf.readStringFromBuffer(64), buf.readLong(), buf.readStringFromBuffer(2048));
     }
 }

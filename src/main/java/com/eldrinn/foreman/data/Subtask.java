@@ -1,10 +1,10 @@
 package com.eldrinn.foreman.data;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-
 import java.io.IOException;
 import java.util.UUID;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
 
 public class Subtask {
 
@@ -31,8 +31,7 @@ public class Subtask {
         return new Subtask(
             new UUID(tag.getLong("idMost"), tag.getLong("idLeast")),
             tag.getString("title"),
-            tag.getBoolean("checked")
-        );
+            tag.getBoolean("checked"));
     }
 
     public void writeToBuf(PacketBuffer buf) throws IOException {
@@ -43,10 +42,6 @@ public class Subtask {
     }
 
     public static Subtask readFromBuf(PacketBuffer buf) throws IOException {
-        return new Subtask(
-            new UUID(buf.readLong(), buf.readLong()),
-            buf.readStringFromBuffer(256),
-            buf.readBoolean()
-        );
+        return new Subtask(new UUID(buf.readLong(), buf.readLong()), buf.readStringFromBuffer(256), buf.readBoolean());
     }
 }
