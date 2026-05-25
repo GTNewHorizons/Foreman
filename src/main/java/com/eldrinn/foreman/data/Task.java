@@ -21,6 +21,9 @@ public class Task {
     public List<UUID> assignees; // UUIDs, display names resolved on client
     @Nullable
     public TaskLocation location;
+    @Nullable
+    public String iconItem; // format: "modid:itemname:meta", e.g. "minecraft:diamond:0"
+    public boolean showOnMap = false;
     public List<Subtask> subtasks;
     public List<Comment> comments; // soft limit enforced on add: max 50
 
@@ -55,6 +58,9 @@ public class Task {
         tag.setBoolean("hasLocation", location != null);
         if (location != null) tag.setTag("location", location.toNBT());
 
+        if (iconItem != null) tag.setString("iconItem", iconItem);
+        tag.setBoolean("showOnMap", showOnMap);
+
         NBTTagList subtaskList = new NBTTagList();
         for (Subtask s : subtasks) subtaskList.appendTag(s.toNBT());
         tag.setTag("subtasks", subtaskList);
@@ -82,6 +88,9 @@ public class Task {
         if (tag.getBoolean("hasLocation")) {
             task.location = TaskLocation.fromNBT(tag.getCompoundTag("location"));
         }
+
+        if (tag.hasKey("iconItem")) task.iconItem = tag.getString("iconItem");
+        task.showOnMap = tag.getBoolean("showOnMap");
 
         NBTTagList subtaskList = tag.getTagList("subtasks", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < subtaskList.tagCount(); i++) {
@@ -112,6 +121,9 @@ public class Task {
         buf.writeBoolean(location != null);
         if (location != null) location.writeToBuf(buf);
 
+        buf.writeStringToBuffer(iconItem != null ? iconItem : "");
+        buf.writeBoolean(showOnMap);
+
         buf.writeInt(subtasks.size());
         for (Subtask s : subtasks) s.writeToBuf(buf);
 
@@ -139,6 +151,10 @@ public class Task {
         if (buf.readBoolean()) {
             task.location = TaskLocation.readFromBuf(buf);
         }
+
+        String icon = buf.readStringFromBuffer(256);
+        task.iconItem = icon.isEmpty() ? null : icon;
+        task.showOnMap = buf.readBoolean();
 
         int subtaskCount = buf.readInt();
         if (subtaskCount < 0 || subtaskCount > 200) throw new IOException("Invalid subtask count: " + subtaskCount);
