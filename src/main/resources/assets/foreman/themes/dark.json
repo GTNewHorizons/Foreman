@@ -12,9 +12,9 @@
   },
   "toggleButton": {
     "color": "0xFF2A2A3C",
-    "textColor": "0xFFE0E0EE",
+    "textColor": "0xFF888899",
     "textShadow": false,
-    "selectedColor": "0xFF4A6FA5",
+    "selectedColor": "0xFF1A5FAA",
     "selectedTextColor": "0xFFFFFFFF"
   },
   "textField": {
