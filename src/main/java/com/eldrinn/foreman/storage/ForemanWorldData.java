@@ -24,8 +24,8 @@ public class ForemanWorldData extends WorldSavedData {
 
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger("foreman");
 
-    // Insertion-ordered map for deterministic list output.
-    private final Map<UUID, Task> tasks = new LinkedHashMap<>();
+    // Outer key = teamId, inner key = taskId
+    private final Map<UUID, LinkedHashMap<UUID, Task>> teamTasks = new LinkedHashMap<>();
 
     public ForemanWorldData() {
         super(DATA_NAME);
@@ -51,54 +51,110 @@ public class ForemanWorldData extends WorldSavedData {
         return data;
     }
 
-    public Collection<Task> getAllTasks() {
-        return Collections.unmodifiableCollection(tasks.values());
+    public Collection<Task> getTeamTasks(UUID teamId) {
+        LinkedHashMap<UUID, Task> map = teamTasks.get(teamId);
+        return map == null ? Collections.emptyList() : Collections.unmodifiableCollection(map.values());
     }
 
     @Nullable
-    public Task getTask(UUID id) {
-        return tasks.get(id);
+    public Task getTask(UUID teamId, UUID taskId) {
+        LinkedHashMap<UUID, Task> map = teamTasks.get(teamId);
+        return map == null ? null : map.get(taskId);
     }
 
-    public void addTask(Task task) {
-        tasks.put(task.id, task);
+    public void addTask(UUID teamId, Task task) {
+        teamTasks.computeIfAbsent(teamId, k -> new LinkedHashMap<>())
+            .put(task.id, task);
         markDirty();
     }
 
-    public void updateTask(Task task) {
-        tasks.put(task.id, task);
-        markDirty();
+    public void updateTask(UUID teamId, Task task) {
+        LinkedHashMap<UUID, Task> map = teamTasks.get(teamId);
+        if (map != null) {
+            map.put(task.id, task);
+            markDirty();
+        }
     }
 
-    /** Returns true if a task with the given id existed and was removed. */
-    public boolean deleteTask(UUID id) {
-        if (tasks.remove(id) != null) {
+    public boolean deleteTask(UUID teamId, UUID taskId) {
+        LinkedHashMap<UUID, Task> map = teamTasks.get(teamId);
+        if (map != null && map.remove(taskId) != null) {
             markDirty();
             return true;
         }
         return false;
     }
 
+    /** Called on TeamMergeEvent — moves all tasks from consumed team to surviving team. */
+    public void mergeTasks(UUID consumedTeamId, UUID survivingTeamId) {
+        LinkedHashMap<UUID, Task> consumed = teamTasks.remove(consumedTeamId);
+        if (consumed == null || consumed.isEmpty()) return;
+        teamTasks.computeIfAbsent(survivingTeamId, k -> new LinkedHashMap<>())
+            .putAll(consumed);
+        markDirty();
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        tasks.clear();
-        NBTTagList list = compound.getTagList("tasks", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < list.tagCount(); i++) {
-            try {
-                Task task = Task.fromNBT(list.getCompoundTagAt(i));
-                tasks.put(task.id, task);
-            } catch (Exception e) {
-                LOG.warn("Skipping corrupt task entry at index {}: {}", i, e.getMessage());
+        teamTasks.clear();
+
+        if (compound.hasKey("perTeamTasks")) {
+            // New format
+            NBTTagList teamList = compound.getTagList("perTeamTasks", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < teamList.tagCount(); i++) {
+                NBTTagCompound entry = teamList.getCompoundTagAt(i);
+                UUID teamId = new UUID(entry.getLong("teamIdMost"), entry.getLong("teamIdLeast"));
+                NBTTagList taskList = entry.getTagList("tasks", Constants.NBT.TAG_COMPOUND);
+                LinkedHashMap<UUID, Task> map = new LinkedHashMap<>();
+                for (int j = 0; j < taskList.tagCount(); j++) {
+                    try {
+                        Task task = Task.fromNBT(taskList.getCompoundTagAt(j));
+                        map.put(task.id, task);
+                    } catch (Exception e) {
+                        LOG.warn("Skipping corrupt task at team {}, index {}: {}", teamId, j, e.getMessage());
+                    }
+                }
+                teamTasks.put(teamId, map);
+            }
+        } else if (compound.hasKey("tasks")) {
+            // Migration: old flat format — tasks go under a sentinel team UUID
+            UUID legacyTeam = UUID.fromString("00000000-0000-0000-0000-000000000000");
+            NBTTagList list = compound.getTagList("tasks", Constants.NBT.TAG_COMPOUND);
+            LinkedHashMap<UUID, Task> map = new LinkedHashMap<>();
+            for (int i = 0; i < list.tagCount(); i++) {
+                try {
+                    Task task = Task.fromNBT(list.getCompoundTagAt(i));
+                    map.put(task.id, task);
+                } catch (Exception e) {
+                    LOG.warn("Skipping corrupt legacy task at index {}: {}", i, e.getMessage());
+                }
+            }
+            if (!map.isEmpty()) {
+                teamTasks.put(legacyTeam, map);
+                LOG.info("Migrated {} legacy tasks to sentinel team {}", map.size(), legacyTeam);
             }
         }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
-        NBTTagList list = new NBTTagList();
-        for (Task task : tasks.values()) {
-            list.appendTag(task.toNBT());
+        NBTTagList teamList = new NBTTagList();
+        for (Map.Entry<UUID, LinkedHashMap<UUID, Task>> teamEntry : teamTasks.entrySet()) {
+            NBTTagCompound entry = new NBTTagCompound();
+            entry.setLong(
+                "teamIdMost",
+                teamEntry.getKey()
+                    .getMostSignificantBits());
+            entry.setLong(
+                "teamIdLeast",
+                teamEntry.getKey()
+                    .getLeastSignificantBits());
+            NBTTagList taskList = new NBTTagList();
+            for (Task task : teamEntry.getValue()
+                .values()) taskList.appendTag(task.toNBT());
+            entry.setTag("tasks", taskList);
+            teamList.appendTag(entry);
         }
-        compound.setTag("tasks", list);
+        compound.setTag("perTeamTasks", teamList);
     }
 }

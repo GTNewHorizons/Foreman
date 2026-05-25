@@ -1,7 +1,10 @@
 package com.eldrinn.foreman.proxy;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import com.eldrinn.foreman.command.ForemanCommand;
 import com.eldrinn.foreman.event.PlayerLoginHandler;
+import com.eldrinn.foreman.event.TeamMergeListener;
 import com.eldrinn.foreman.network.ForemanNetwork;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -20,6 +23,7 @@ public class CommonProxy {
         FMLCommonHandler.instance()
             .bus()
             .register(new PlayerLoginHandler());
+        MinecraftForge.EVENT_BUS.register(new TeamMergeListener());
     }
 
     public void serverStarting(FMLServerStartingEvent event) {

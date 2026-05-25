@@ -1,10 +1,8 @@
 package com.eldrinn.foreman.cache;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,7 +21,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ForemanClientCache {
 
     private static Map<UUID, Task> tasks = new LinkedHashMap<>();
-    private static List<PlayerEntry> teamMembers = new ArrayList<>();
 
     public static void update(Collection<Task> incoming) {
         tasks.clear();
@@ -32,16 +29,8 @@ public class ForemanClientCache {
         }
     }
 
-    public static void updateTeamMembers(List<PlayerEntry> incoming) {
-        teamMembers = new ArrayList<>(incoming);
-    }
-
     public static Collection<Task> getAll() {
         return Collections.unmodifiableCollection(tasks.values());
-    }
-
-    public static List<PlayerEntry> getTeamMembers() {
-        return Collections.unmodifiableList(teamMembers);
     }
 
     @Nullable

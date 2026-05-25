@@ -1,15 +1,15 @@
 package com.eldrinn.foreman.gui.widget;
 
-import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.gui.GuiPlayerInfo;
+import net.minecraft.client.network.NetHandlerPlayClient;
 
-import com.cleanroommc.modularui.widgets.ButtonWidget;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.BoolValue;
 import com.cleanroommc.modularui.widgets.TextWidget;
-import com.eldrinn.foreman.cache.ForemanClientCache;
-import com.eldrinn.foreman.cache.PlayerEntry;
+import com.cleanroommc.modularui.widgets.ToggleButton;
 import com.eldrinn.foreman.data.Task;
 import com.eldrinn.foreman.data.TaskStatus;
 import com.eldrinn.foreman.gui.ForemanGui;
@@ -19,20 +19,32 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class TaskRowWidget extends ButtonWidget<TaskRowWidget> {
+public class TaskRowWidget extends ToggleButton {
 
     public TaskRowWidget(Task task, ForemanGuiData data) {
-        size(LEFT_WIDTH - 8, 20);
-        child(new TextWidget(buildLabel(task)));
-        onMousePressed(mouseButton -> {
-            if (mouseButton != 0) return false;
-            data.selectTask(task.id);
-            ForemanGui.open(data);
-            return true;
-        });
+        size(ROW_WIDTH, 20);
+
+        TextWidget normalLabel = new TextWidget(buildLabel(task));
+        normalLabel.size(ROW_WIDTH, 20);
+        normalLabel.alignment(Alignment.CenterLeft);
+
+        TextWidget activeLabel = new TextWidget(buildLabel(task));
+        activeLabel.size(ROW_WIDTH, 20);
+        activeLabel.alignment(Alignment.CenterLeft);
+        activeLabel.color(0xFFFFFF);
+
+        value(new BoolValue.Dynamic(() -> task.id.equals(data.selectedTaskId), selected -> {
+            if (selected) {
+                data.selectTask(task.id);
+                ForemanGui.open(data);
+            }
+        }));
+        child(false, normalLabel);
+        child(true, activeLabel);
     }
 
     private static final int LEFT_WIDTH = com.eldrinn.foreman.gui.ForemanGui.LEFT_WIDTH;
+    private static final int ROW_WIDTH = LEFT_WIDTH - 2 * com.eldrinn.foreman.gui.ForemanGui.PADDING;
 
     private static String buildLabel(Task task) {
         return statusIcon(task.status) + " " + truncate(task.title, 28) + "  " + buildAssigneeText(task);
@@ -40,37 +52,50 @@ public class TaskRowWidget extends ButtonWidget<TaskRowWidget> {
 
     private static String statusIcon(TaskStatus status) {
         switch (status) {
-            case OPEN:        return "*";
-            case IN_PROGRESS: return "~";
-            case DONE:        return "+";
-            default:          return "?";
+            case OPEN:
+                return "*";
+            case IN_PROGRESS:
+                return "~";
+            case DONE:
+                return "+";
+            default:
+                return "?";
         }
     }
 
     private static String buildAssigneeText(Task task) {
         if (task.assignees.isEmpty()) return "";
-        List<PlayerEntry> members = ForemanClientCache.getTeamMembers();
         StringBuilder sb = new StringBuilder();
         int shown = 0;
         for (UUID uuid : task.assignees) {
             if (shown >= 2) {
-                sb.append(" +").append(task.assignees.size() - 2).append(" more");
+                sb.append(" +")
+                    .append(task.assignees.size() - 2)
+                    .append(" more");
                 break;
             }
-            String name = resolveName(uuid, members);
+            String name = resolveName(uuid);
             if (sb.length() > 0) sb.append(" ");
-            sb.append("[").append(name).append("]");
+            sb.append("[")
+                .append(name)
+                .append("]");
             shown++;
         }
         return sb.toString();
     }
 
-    private static String resolveName(UUID uuid, List<PlayerEntry> members) {
-        for (PlayerEntry e : members) {
-            if (e.id.equals(uuid)) return e.name;
+    private static String resolveName(UUID uuid) {
+        NetHandlerPlayClient netHandler = Minecraft.getMinecraft().thePlayer.sendQueue;
+        for (GuiPlayerInfo info : netHandler.playerInfoList) {
+            net.minecraft.entity.player.EntityPlayer player = Minecraft.getMinecraft().theWorld
+                .getPlayerEntityByName(info.name);
+            if (player != null && uuid.equals(
+                player.getGameProfile()
+                    .getId()))
+                return info.name;
         }
-        NetworkPlayerInfo info = Minecraft.getMinecraft().getNetHandler().getPlayerInfo(uuid);
-        return info != null ? info.getGameProfile().getName() : uuid.toString().substring(0, 8);
+        return uuid.toString()
+            .substring(0, 8);
     }
 
     private static String truncate(String s, int max) {
