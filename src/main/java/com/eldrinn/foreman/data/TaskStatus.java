@@ -7,16 +7,11 @@ public enum TaskStatus {
     DONE;
 
     public String displayName() {
-        switch (this) {
-            case OPEN:
-                return "To do";
-            case IN_PROGRESS:
-                return "Doing";
-            case DONE:
-                return "Done";
-            default:
-                return name();
-        }
+        return switch (this) {
+            case OPEN -> net.minecraft.util.StatCollector.translateToLocal("foreman.status.open");
+            case IN_PROGRESS -> net.minecraft.util.StatCollector.translateToLocal("foreman.status.in_progress");
+            case DONE -> net.minecraft.util.StatCollector.translateToLocal("foreman.status.done");
+        };
     }
 
     public static TaskStatus fromNBT(String name) {

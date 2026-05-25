@@ -68,7 +68,7 @@ public class TaskLayerManager extends InteractableLayerManager {
     public void refreshFromCache(Collection<Task> tasks) {
         locations.clear();
         for (Task task : tasks) {
-            if (task.location != null) {
+            if (task.location != null && task.showOnMap) {
                 locations.add(new TaskMapLocation(task));
             }
         }
