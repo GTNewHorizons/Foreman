@@ -2,9 +2,12 @@ package com.eldrinn.foreman.proxy;
 
 import net.minecraft.client.settings.KeyBinding;
 
+import org.lwjgl.input.Keyboard;
+
 import com.eldrinn.foreman.gui.ForemanGui;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -13,14 +16,13 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.input.Keyboard;
-
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
     public static final KeyBinding KEY_OPEN_GUI = new KeyBinding(
-        "key.foreman.open", Keyboard.KEY_Y, "key.categories.foreman");
+        "key.foreman.open",
+        Keyboard.KEY_Y,
+        "key.categories.foreman");
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
@@ -31,7 +33,9 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
         ClientRegistry.registerKeyBinding(KEY_OPEN_GUI);
-        MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(this);
     }
 
     @Override
@@ -45,5 +49,6 @@ public class ClientProxy extends CommonProxy {
         if (KEY_OPEN_GUI.isPressed()) {
             ForemanGui.open();
         }
+        ForemanGui.tick();
     }
 }

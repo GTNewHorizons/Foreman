@@ -10,6 +10,7 @@ import net.minecraft.network.PacketBuffer;
 
 import com.eldrinn.foreman.cache.ForemanClientCache;
 import com.eldrinn.foreman.data.Task;
+import com.eldrinn.foreman.gui.ForemanGui;
 import com.gtnewhorizon.gtnhlib.network.base.IPacket;
 
 import cpw.mods.fml.relauncher.Side;
@@ -46,6 +47,7 @@ public class SyncAllTasksPacket implements IPacket {
     @SideOnly(Side.CLIENT)
     public IPacket executeClient(NetHandlerPlayClient handler) {
         ForemanClientCache.update(tasks);
+        ForemanGui.notifySyncReceived();
         return null;
     }
 }
