@@ -23,6 +23,12 @@ public class ForemanGuiData {
     /** True when "New Task" was clicked — right panel shows empty create form. */
     public boolean createMode = false;
 
+    /** Current search query; empty string means no filter. */
+    public String searchQuery = "";
+
+    /** Whether the search field is expanded. */
+    public boolean searchExpanded = false;
+
     public void selectTask(UUID id) {
         this.selectedTaskId = id;
         this.createMode = false;

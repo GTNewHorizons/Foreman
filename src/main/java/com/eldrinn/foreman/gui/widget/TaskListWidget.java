@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.BoolValue;
+import com.cleanroommc.modularui.value.StringValue;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.ListWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
@@ -35,23 +36,67 @@ public class TaskListWidget extends Flow {
         child(
             Flow.row()
                 .size(W, 24)
-                .child(tabButton("To do", TaskStatus.OPEN, data, TAB_W))
-                .child(tabButton("Doing", TaskStatus.IN_PROGRESS, data, TAB_W))
-                .child(tabButton("Done", TaskStatus.DONE, data, TAB_W)));
+                .child(
+                    tabButton(
+                        net.minecraft.util.StatCollector.translateToLocal("foreman.gui.tab.open"),
+                        TaskStatus.OPEN,
+                        data,
+                        TAB_W))
+                .child(
+                    tabButton(
+                        net.minecraft.util.StatCollector.translateToLocal("foreman.gui.tab.in_progress"),
+                        TaskStatus.IN_PROGRESS,
+                        data,
+                        TAB_W))
+                .child(
+                    tabButton(
+                        net.minecraft.util.StatCollector.translateToLocal("foreman.gui.tab.done"),
+                        TaskStatus.DONE,
+                        data,
+                        TAB_W)));
 
-        // Search placeholder (non-functional, reserved for Phase 4)
-        TextWidget searchPlaceholder = new TextWidget("Search...");
-        searchPlaceholder.size(W, 18);
-        child(searchPlaceholder);
+        // Search: icon button toggles field; live search on keystroke
+        final int SEARCH_BTN_W = 22;
+        Flow searchRow = Flow.row()
+            .size(W, 22);
+        searchRow.child(
+            new ButtonWidget<>().size(SEARCH_BTN_W, 20)
+                .overlay(com.eldrinn.foreman.gui.ForemanIcons.SEARCH)
+                .onMousePressed(btn -> {
+                    if (btn != 0) return false;
+                    data.searchExpanded = !data.searchExpanded;
+                    if (!data.searchExpanded) {
+                        data.searchQuery = "";
+                        ForemanGui.open(data);
+                    }
+                    return true;
+                }));
+        if (data.searchExpanded) {
+            PlainTextField searchField = new PlainTextField();
+            searchField.size(W - SEARCH_BTN_W, 20);
+            searchField.setTextColor(0xFFFFFF);
+            searchField.autoUpdateOnChange(true);
+            searchField.value(new StringValue.Dynamic(() -> data.searchQuery, val -> {
+                data.searchQuery = val;
+                ForemanGui.open(data);
+            }));
+            searchRow.child(searchField);
+        }
+        child(searchRow);
 
-        // Task list
+        // Task list filtered by active tab and search query
         ListWidget<TaskRowWidget, ?> list = new ListWidget<>();
-        list.size(W, H - 24 - 18 - 28);
+        list.size(W, H - 24 - 22 - 28);
         Collection<Task> all = ForemanClientCache.getAll();
+        String query = data.searchQuery.toLowerCase();
         for (Task task : all) {
-            if (task.status == data.activeTab) {
-                list.child(new TaskRowWidget(task, data));
-            }
+            if (task.status != data.activeTab) continue;
+            if (!query.isEmpty() && !task.title.toLowerCase()
+                .contains(query)
+                && !task.description.toLowerCase()
+                    .contains(query))
+                continue;
+            list.child(new TaskRowWidget(task, data));
         }
         child(list);
 
@@ -59,7 +104,8 @@ public class TaskListWidget extends Flow {
         final int THEME_BTN_W = 28;
         final int NEW_TASK_W = W - THEME_BTN_W - 4;
 
-        TextWidget newTaskLabel = new TextWidget("+ New Task");
+        TextWidget newTaskLabel = new TextWidget(
+            net.minecraft.util.StatCollector.translateToLocal("foreman.gui.new_task"));
         newTaskLabel.size(NEW_TASK_W, 24);
         newTaskLabel.alignment(Alignment.Center);
         newTaskLabel.color(0xFFFFFF);
