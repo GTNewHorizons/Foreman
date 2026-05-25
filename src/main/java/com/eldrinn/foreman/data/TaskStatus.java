@@ -8,10 +8,14 @@ public enum TaskStatus {
 
     public String displayName() {
         switch (this) {
-            case OPEN: return "To do";
-            case IN_PROGRESS: return "Doing";
-            case DONE: return "Done";
-            default: return name();
+            case OPEN:
+                return "To do";
+            case IN_PROGRESS:
+                return "Doing";
+            case DONE:
+                return "Done";
+            default:
+                return name();
         }
     }
 
