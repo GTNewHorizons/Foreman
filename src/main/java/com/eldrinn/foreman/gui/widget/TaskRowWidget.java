@@ -71,9 +71,10 @@ public class TaskRowWidget extends ToggleButton {
         int shown = 0;
         for (UUID uuid : task.assignees) {
             if (shown >= 2) {
-                sb.append(" +")
-                    .append(task.assignees.size() - 2)
-                    .append(" more");
+                sb.append(
+                    String.format(
+                        net.minecraft.util.StatCollector.translateToLocal("foreman.gui.row.more"),
+                        task.assignees.size() - 2));
                 break;
             }
             String name = resolveName(uuid);

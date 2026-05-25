@@ -1,0 +1,29 @@
+# Key binding
+key.foreman.open=Open Foreman
+key.categories.foreman=Foreman
+
+# GUI labels
+foreman.gui.new_task=+ New Task
+foreman.gui.search=Search...
+foreman.gui.tab.open=To do
+foreman.gui.tab.in_progress=Doing
+foreman.gui.tab.done=Done
+foreman.gui.detail.description=Description:
+foreman.gui.detail.status=Status:
+foreman.gui.detail.assignees=Assignees:
+foreman.gui.detail.location=Location:
+foreman.gui.detail.subtasks=Subtasks:
+foreman.gui.detail.icon=Icon:
+foreman.gui.detail.set_icon=Set to held
+foreman.gui.detail.pos=Pos
+foreman.gui.detail.show_on_map=Show on map
+foreman.gui.detail.show_on_map.on=ON
+foreman.gui.detail.show_on_map.off=OFF
+foreman.gui.detail.icon_none=(none)
+foreman.gui.row.more= +%s more
+foreman.gui.placeholder=Select a task or press '+ New Task'.
+foreman.gui.not_found=Task not found.
+foreman.chat.assigned=§a[Foreman]§r You have been assigned to: §e%s
+foreman.status.open=Open
+foreman.status.in_progress=In Progress
+foreman.status.done=Done

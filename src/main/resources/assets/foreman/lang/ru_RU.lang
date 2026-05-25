@@ -1,0 +1,29 @@
+# Key binding
+key.foreman.open=Открыть Foreman
+key.categories.foreman=Foreman
+
+# GUI labels
+foreman.gui.new_task=+ Новый таск
+foreman.gui.search=Поиск...
+foreman.gui.tab.open=Открыт
+foreman.gui.tab.in_progress=В работе
+foreman.gui.tab.done=Готово
+foreman.gui.detail.description=Описание:
+foreman.gui.detail.status=Статус:
+foreman.gui.detail.assignees=Исполнители:
+foreman.gui.detail.location=Координаты:
+foreman.gui.detail.subtasks=Подзадачи:
+foreman.gui.detail.icon=Иконка:
+foreman.gui.detail.set_icon=Взять из руки
+foreman.gui.detail.pos=Поз.
+foreman.gui.detail.show_on_map=На карте
+foreman.gui.detail.show_on_map.on=ВКЛ
+foreman.gui.detail.show_on_map.off=ВЫКЛ
+foreman.gui.detail.icon_none=(нет)
+foreman.gui.row.more= +%s ещё
+foreman.gui.placeholder=Выберите таск или нажмите '+ Новый таск'.
+foreman.gui.not_found=Таск не найден.
+foreman.chat.assigned=§a[Foreman]§r Тебя назначили на задачу: §e%s
+foreman.status.open=Открыт
+foreman.status.in_progress=В работе
+foreman.status.done=Готово
