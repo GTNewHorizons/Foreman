@@ -200,14 +200,13 @@ public class TaskDetailWidget extends Flow {
         formList.child(assigneesLabel);
         formList.child(new AssigneePickerWidget(task, data, W));
 
-        // Location header: [label fills rest] [show-on-map label 72] [4px gap] [toggle 36]
-        final int TOGGLE_W = 36;
+        // Location header: [label fills rest] [show-on-map label 72] [4px gap] [toggle EL_H]
         final int MAP_LABEL_W = 72;
         final int MAP_GAP = 4;
         Flow locationHeader = Flow.row()
             .size(W, ROW_H);
         TextWidget locationLabel = new TextWidget(t("foreman.gui.detail.location"));
-        locationLabel.size(W - MAP_LABEL_W - MAP_GAP - TOGGLE_W, EL_H);
+        locationLabel.size(W - MAP_LABEL_W - MAP_GAP - EL_H, EL_H);
         locationLabel.alignment(Alignment.CenterLeft);
         locationHeader.child(locationLabel);
         TextWidget showMapLabel = new TextWidget(t("foreman.gui.detail.show_on_map"));
@@ -217,22 +216,13 @@ public class TaskDetailWidget extends Flow {
         TextWidget mapSpacer = new TextWidget("");
         mapSpacer.size(MAP_GAP, EL_H);
         locationHeader.child(mapSpacer);
-        TextWidget mapOff = new TextWidget(t("foreman.gui.detail.show_on_map.off"));
-        mapOff.size(TOGGLE_W, EL_H);
-        mapOff.alignment(Alignment.Center);
-        mapOff.color(0xFFFFFF);
-        TextWidget mapOn = new TextWidget(t("foreman.gui.detail.show_on_map.on"));
-        mapOn.size(TOGGLE_W, EL_H);
-        mapOn.alignment(Alignment.Center);
-        mapOn.color(0x55FF55);
         locationHeader.child(
-            new ToggleButton().size(TOGGLE_W, EL_H)
+            new ToggleButton().size(EL_H, EL_H)
                 .value(new BoolValue.Dynamic(() -> task.showOnMap, val -> {
                     task.showOnMap = val;
                     sendUpdate();
                 }))
-                .child(false, mapOff)
-                .child(true, mapOn));
+                .overlay(true, com.eldrinn.foreman.gui.ForemanIcons.CHECK_ON));
         formList.child(locationHeader);
         formList.child(buildLocationRow());
 

@@ -37,7 +37,7 @@ public class TaskRowWidget extends Flow {
     public static final int SCROLLBAR_W = 4;
     private static final int ROW_WIDTH = LEFT_WIDTH - 2 * ForemanGui.PADDING - SCROLLBAR_W;
     private static final int STATUS_BTN_W = 20;
-    private static final int ICON_W = 18;
+    private static final int ICON_W = 20;
     private static final int LABEL_W = ROW_WIDTH - ICON_W - STATUS_BTN_W - 2;
 
     public TaskRowWidget(Task task, ForemanGuiData data) {
@@ -55,7 +55,6 @@ public class TaskRowWidget extends Flow {
         activeLabel.size(LABEL_W, 20);
         activeLabel.alignment(Alignment.CenterLeft);
         activeLabel.padding(4, 0, 0, 0);
-        activeLabel.color(0xFFFFFF);
 
         ToggleButton selectBtn = new ToggleButton();
         selectBtn.size(LABEL_W, 20);

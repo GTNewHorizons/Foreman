@@ -6,15 +6,33 @@
     "color": "0xFFF0F0F0"
   },
   "button": {
+    "background": {"type": "texture", "name": "mc_button"},
     "color": "0xFFDDDDDD",
     "textColor": "0xFF222222",
     "textShadow": false
   },
+  "button:hover": {
+    "background": {"type": "texture", "name": "mc_button_hovered"},
+    "color": "0xFFFFFFFF",
+    "textColor": "0xFFFFFFA0",
+    "textShadow": false
+  },
   "toggleButton": {
+    "background": {"type": "texture", "name": "mc_button"},
+    "selectedBackground": {"type": "texture", "name": "mc_button_pressed"},
     "color": "0xFFDDDDDD",
     "textColor": "0xFF222222",
     "textShadow": false,
-    "selectedColor": "0xFF4A6FA5",
+    "selectedColor": "0xFFFFFFFF",
+    "selectedTextColor": "0xFFFFFFFF"
+  },
+  "toggleButton:hover": {
+    "background": {"type": "texture", "name": "mc_button_hovered"},
+    "selectedBackground": {"type": "texture", "name": "mc_button_hovered_pressed"},
+    "color": "0xFFFFFFFF",
+    "textColor": "0xFFFFFFA0",
+    "textShadow": false,
+    "selectedColor": "0xFFFFFFFF",
     "selectedTextColor": "0xFFFFFFFF"
   },
   "textField": {

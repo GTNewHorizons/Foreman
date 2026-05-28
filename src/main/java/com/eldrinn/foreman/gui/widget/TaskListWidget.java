@@ -58,9 +58,9 @@ public class TaskListWidget extends Flow {
                         TAB_W)));
 
         // Search: icon button toggles field; live search on keystroke
-        final int SEARCH_BTN_W = 22;
+        final int SEARCH_BTN_W = 20;
         Flow searchRow = Flow.row()
-            .size(W, 22);
+            .size(W, 20);
         searchRow.child(
             new ButtonWidget<>().size(SEARCH_BTN_W, 20)
                 .overlay(com.eldrinn.foreman.gui.ForemanIcons.SEARCH)
@@ -90,7 +90,7 @@ public class TaskListWidget extends Flow {
         @SuppressWarnings("rawtypes")
         ListWidget list = new ListWidget();
         list.scrollDirection(new VerticalScrollData(false, TaskRowWidget.SCROLLBAR_W));
-        list.size(W, H - 24 - 22 - 28);
+        list.size(W, H - 24 - 20 - 28);
         Collection<Task> all = ForemanClientCache.getAll();
         String query = data.searchQuery.toLowerCase();
         for (Task task : all) {
@@ -112,12 +112,10 @@ public class TaskListWidget extends Flow {
             net.minecraft.util.StatCollector.translateToLocal("foreman.gui.new_task"));
         newTaskLabel.size(NEW_TASK_W, 24);
         newTaskLabel.alignment(Alignment.Center);
-        newTaskLabel.color(0xFFFFFF);
 
         TextWidget themeLabel = new TextWidget("☀");
         themeLabel.size(THEME_BTN_W, 24);
         themeLabel.alignment(Alignment.Center);
-        themeLabel.color(0xFFFFFF);
 
         child(
             Flow.row()
@@ -146,12 +144,10 @@ public class TaskListWidget extends Flow {
         TextWidget normalLabel = new TextWidget(label);
         normalLabel.size(width, 22);
         normalLabel.alignment(Alignment.Center);
-        normalLabel.color(0xFFFFFF);
 
         TextWidget activeLabel = new TextWidget(label);
         activeLabel.size(width, 22);
         activeLabel.alignment(Alignment.Center);
-        activeLabel.color(0xFFFFFF);
 
         return new ToggleButton().size(width, 22)
             .value(new BoolValue.Dynamic(() -> data.activeTab == status, selected -> {

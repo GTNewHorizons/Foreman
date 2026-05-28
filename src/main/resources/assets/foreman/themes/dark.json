@@ -1,24 +1,42 @@
 {
-  "color": "0xFF2D2D2D",
+  "color": "0xFF4A4948",
   "textColor": "0xFFE0E0E0",
   "textShadow": false,
   "panel": {
-    "color": "0xFF2D2D2D"
+    "color": "0xFF4A4948"
   },
   "button": {
-    "color": "0xFF3A3A3A",
+    "background": {"type": "texture", "name": "mc_button"},
+    "color": "0xFF434241",
+    "textColor": "0xFFE0E0E0",
+    "textShadow": false
+  },
+  "button:hover": {
+    "background": {"type": "texture", "name": "mc_button_hovered"},
+    "color": "0xFF555452",
     "textColor": "0xFFE0E0E0",
     "textShadow": false
   },
   "toggleButton": {
-    "color": "0xFF3A3A3A",
-    "textColor": "0xFF999999",
+    "background": {"type": "texture", "name": "mc_button"},
+    "selectedBackground": {"type": "texture", "name": "mc_button_pressed"},
+    "color": "0xFF434241",
+    "textColor": "0xFFE0E0E0",
     "textShadow": false,
-    "selectedColor": "0xFF555555",
+    "selectedColor": "0xFF3C3B3A",
+    "selectedTextColor": "0xFFFFFFFF"
+  },
+  "toggleButton:hover": {
+    "background": {"type": "texture", "name": "mc_button_hovered"},
+    "selectedBackground": {"type": "texture", "name": "mc_button_hovered_pressed"},
+    "color": "0xFF555452",
+    "textColor": "0xFFE0E0E0",
+    "textShadow": false,
+    "selectedColor": "0xFF3C3B3A",
     "selectedTextColor": "0xFFFFFFFF"
   },
   "textField": {
-    "color": "0xFF2A2A2A",
+    "color": "0xFF2C2C2C",
     "textColor": "0xFFE0E0E0",
     "textShadow": false
   }
