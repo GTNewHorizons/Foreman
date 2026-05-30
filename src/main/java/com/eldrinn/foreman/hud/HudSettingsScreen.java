@@ -8,7 +8,9 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
+import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.eldrinn.foreman.cache.ForemanClientCache;
 import com.eldrinn.foreman.config.PinnedTasksConfig;
 import com.eldrinn.foreman.data.Task;
@@ -50,7 +52,9 @@ public class HudSettingsScreen extends GuiScreen {
         int hx = pos[0];
         int hy = pos[1];
         drawRect(hx, hy, hx + HANDLE_SIZE, hy + HANDLE_SIZE, 0xFFCC3333);
-        fontRendererObj.drawStringWithShadow("⇔", hx + 1, hy + 1, 0xFFFFFF);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
+        GuiTextures.ALL_DIRECTIONS.draw(hx, hy, HANDLE_SIZE, HANDLE_SIZE);
+        GL11.glColor4f(1f, 1f, 1f, 1f);
 
         drawControlPanel(cfg, sw, sh);
 

@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.cleanroommc.modularui.drawable.GuiTextures;
+import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.BoolValue;
 import com.cleanroommc.modularui.value.StringValue;
@@ -36,6 +37,9 @@ public class TaskDetailWidget extends Flow {
     private static final int ROW_H = 24;
     private static final int EL_H = 20;
     private static final int SCROLLBAR_W = 4;
+
+    private static final UITexture ICON_ADD = GuiTextures.ADD.withColorOverride(0xFF40C040);
+    private static final UITexture ICON_REMOVE = GuiTextures.REMOVE.withColorOverride(0xFFC04040);
 
     private final ForemanGuiData data;
     private final Task task;
@@ -133,7 +137,7 @@ public class TaskDetailWidget extends Flow {
         if (!isNew) {
             header.child(
                 new ButtonWidget<>().size(EL_H, EL_H)
-                    .overlay(GuiTextures.REMOVE)
+                    .overlay(ICON_REMOVE)
                     .onMousePressed(btn -> {
                         if (btn != 0) return false;
                         ForemanNetwork.CHANNEL.sendToServer(new DeleteTaskPacket(task.id));
@@ -144,13 +148,17 @@ public class TaskDetailWidget extends Flow {
 
             boolean pinned = ForemanClientCache.isPinned(task.id);
             boolean canPin = ForemanClientCache.canPin();
-            TextWidget pinIcon = new TextWidget(pinned ? "★" : "☆");
-            pinIcon.size(EL_H, EL_H);
-            pinIcon.alignment(Alignment.Center);
-            pinIcon.color(pinned ? 0xF0C040 : (canPin ? 0xAAAAAA : 0x555555));
+            UITexture pinIcon;
+            if (pinned) {
+                pinIcon = GuiTextures.FAVORITE.withColorOverride(0xFFF0C040);
+            } else if (canPin) {
+                pinIcon = GuiTextures.FAVORITE_OUTLINE;
+            } else {
+                pinIcon = GuiTextures.FAVORITE_OUTLINE.withColorOverride(0xFF555555);
+            }
             ButtonWidget<?> pinBtn = new ButtonWidget<>();
             pinBtn.size(EL_H, EL_H);
-            pinBtn.child(pinIcon);
+            pinBtn.overlay(pinIcon);
             header.child(pinBtn.onMousePressed(btn -> {
                 if (btn != 0) return false;
                 if (pinned) {
@@ -372,7 +380,7 @@ public class TaskDetailWidget extends Flow {
                     .child(subtaskTitle)
                     .child(
                         new ButtonWidget<>().size(EL_H, EL_H)
-                            .overlay(GuiTextures.REMOVE)
+                            .overlay(ICON_REMOVE)
                             .onMousePressed(btn -> {
                                 if (btn != 0) return false;
                                 task.subtasks.remove(s);
@@ -395,7 +403,7 @@ public class TaskDetailWidget extends Flow {
                 .child(addField)
                 .child(
                     new ButtonWidget<>().size(EL_H, EL_H)
-                        .overlay(GuiTextures.ADD)
+                        .overlay(ICON_ADD)
                         .onMousePressed(btn -> {
                             if (btn != 0) return false;
                             String title = newTitle[0].trim();

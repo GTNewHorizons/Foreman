@@ -10,7 +10,9 @@ import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import com.cleanroommc.modularui.api.ITheme;
+import com.cleanroommc.modularui.api.drawable.IDrawable;
 import com.cleanroommc.modularui.drawable.GuiDraw;
+import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.theme.WidgetThemeEntry;
 import com.cleanroommc.modularui.utils.Alignment;
@@ -68,13 +70,17 @@ public class TaskRowWidget extends Flow {
 
         boolean pinned = ForemanClientCache.isPinned(task.id);
         boolean canPin = ForemanClientCache.canPin();
-        TextWidget pinIcon = new TextWidget(pinned ? "★" : "☆");
-        pinIcon.size(PIN_BTN_W, 20);
-        pinIcon.alignment(Alignment.Center);
-        pinIcon.color(pinned ? 0xF0C040 : (canPin ? 0xAAAAAA : 0x555555));
+        IDrawable pinIcon;
+        if (pinned) {
+            pinIcon = GuiTextures.FAVORITE.withColorOverride(0xFFF0C040);
+        } else if (canPin) {
+            pinIcon = GuiTextures.FAVORITE_OUTLINE;
+        } else {
+            pinIcon = GuiTextures.FAVORITE_OUTLINE.withColorOverride(0xFF555555);
+        }
         ButtonWidget<?> pinBtn = new ButtonWidget<>();
         pinBtn.size(PIN_BTN_W, 20);
-        pinBtn.child(pinIcon);
+        pinBtn.overlay(pinIcon);
         pinBtn.onMousePressed(btn -> {
             if (btn != 0) return false;
             if (ForemanClientCache.isPinned(task.id)) {
