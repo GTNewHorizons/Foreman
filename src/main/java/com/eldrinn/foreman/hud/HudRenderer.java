@@ -119,7 +119,7 @@ public class HudRenderer {
             for (Subtask st : task.subtasks) {
                 if (shown >= MAX_SUBTASKS_SHOWN) break;
                 int color = st.checked ? COLOR_GRAY : COLOR_WHITE;
-                String label = st.checked ? "§m✔ " + st.title + "§r" : "○ " + st.title;
+                String label = st.checked ? "§m- " + st.title + "§r" : "- " + st.title;
                 fr.drawStringWithShadow(label, x + PADDING, y, color);
                 y += LINE_H;
                 shown++;
@@ -159,7 +159,7 @@ public class HudRenderer {
             int shown = 0;
             for (Subtask st : t.subtasks) {
                 if (shown >= MAX_SUBTASKS_SHOWN) break;
-                max = Math.max(max, PADDING + fr.getStringWidth((st.checked ? "✔ " : "○ ") + st.title));
+                max = Math.max(max, PADDING + fr.getStringWidth("- " + st.title));
                 shown++;
             }
         }
