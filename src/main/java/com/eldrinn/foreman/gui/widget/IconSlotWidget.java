@@ -77,7 +77,6 @@ public class IconSlotWidget extends Widget<IconSlotWidget>
             context.getCurrentDrawingZ());
     }
 
-    @SuppressWarnings("unchecked")
     public static ItemStack parseIconItem(String iconItem) {
         if (iconItem == null || iconItem.isEmpty()) return null;
         String[] parts = iconItem.split(":");

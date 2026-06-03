@@ -26,6 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TaskListWidget extends Flow {
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public TaskListWidget(ForemanGuiData data) {
         super(com.cleanroommc.modularui.api.GuiAxis.Y);
         final int HEIGHT = ForemanGui.getHeight();
@@ -93,7 +94,6 @@ public class TaskListWidget extends Flow {
         child(searchRow);
 
         // Task list filtered by active tab and search query
-        @SuppressWarnings("rawtypes")
         ListWidget list = new ListWidget();
         list.scrollDirection(new VerticalScrollData(false, TaskRowWidget.SCROLLBAR_W));
         list.size(W, H - 24 - P - 20 - P - 28);
@@ -114,10 +114,9 @@ public class TaskListWidget extends Flow {
         final int ICON_BTN_W = 20;
         final int NEW_TASK_W = W - ICON_BTN_W * 2;
 
-        TextWidget newTaskLabel = new TextWidget(
-            net.minecraft.util.StatCollector.translateToLocal("foreman.gui.new_task"));
+        var newTaskLabel = new TextWidget<>(net.minecraft.util.StatCollector.translateToLocal("foreman.gui.new_task"));
         newTaskLabel.size(NEW_TASK_W, 20);
-        newTaskLabel.alignment(Alignment.Center);
+        newTaskLabel.textAlign(Alignment.Center);
 
         child(
             Flow.row()
@@ -161,13 +160,13 @@ public class TaskListWidget extends Flow {
     }
 
     private static ToggleButton tabButton(String label, TaskStatus status, ForemanGuiData data, int width) {
-        TextWidget normalLabel = new TextWidget(label);
+        var normalLabel = new TextWidget<>(label);
         normalLabel.size(width, 24);
-        normalLabel.alignment(Alignment.Center);
+        normalLabel.textAlign(Alignment.Center);
 
-        TextWidget activeLabel = new TextWidget(label);
+        var activeLabel = new TextWidget<>(label);
         activeLabel.size(width, 24);
-        activeLabel.alignment(Alignment.Center);
+        activeLabel.textAlign(Alignment.Center);
 
         return new ToggleButton().size(width, 24)
             .value(new BoolValue.Dynamic(() -> data.activeTab == status, selected -> {

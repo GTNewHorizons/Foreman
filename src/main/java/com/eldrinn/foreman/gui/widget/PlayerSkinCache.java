@@ -26,7 +26,4 @@ public class PlayerSkinCache {
         });
     }
 
-    public void clear() {
-        cache.clear();
-    }
 }

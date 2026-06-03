@@ -53,8 +53,7 @@ public final class BetterQuestingIntegration {
         // Map TaskRetrieval required items to subtasks
         for (DBEntry<ITask> entry : quest.getTasks()
             .getEntries()) {
-            if (entry.getValue() instanceof TaskRetrieval) {
-                TaskRetrieval retrieval = (TaskRetrieval) entry.getValue();
+            if (entry.getValue() instanceof TaskRetrieval retrieval) {
                 for (BigItemStack required : retrieval.requiredItems) {
                     String itemName = required.getBaseStack()
                         .getDisplayName();
@@ -73,7 +72,7 @@ public final class BetterQuestingIntegration {
     private static String toIconString(BigItemStack iconStack) {
         if (iconStack == null) return null;
         ItemStack base = iconStack.getBaseStack();
-        if (base == null || base.getItem() == null) return null;
+        if (base.getItem() == null) return null;
         String itemName = Item.itemRegistry.getNameForObject(base.getItem());
         return itemName != null ? itemName + ":" + base.getItemDamage() : null;
     }

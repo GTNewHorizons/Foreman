@@ -14,18 +14,18 @@ import net.minecraftforge.common.util.Constants;
 
 public class Task {
 
-    public UUID id;
+    public final UUID id;
     public String title;
     public String description;
     public TaskStatus status;
-    public List<UUID> assignees; // UUIDs, display names resolved on client
+    public final List<UUID> assignees; // UUIDs, display names resolved on client
     @Nullable
     public TaskLocation location;
     @Nullable
     public String iconItem; // format: "modid:itemname:meta", e.g. "minecraft:diamond:0"
     public boolean showOnMap = false;
-    public List<Subtask> subtasks;
-    public List<Comment> comments; // soft limit enforced on add: max 50
+    public final List<Subtask> subtasks;
+    public final List<Comment> comments; // soft limit enforced on add: max 50
 
     public Task(UUID id, String title, String description, TaskStatus status) {
         this.id = id;

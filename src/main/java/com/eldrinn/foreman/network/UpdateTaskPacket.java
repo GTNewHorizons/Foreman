@@ -48,7 +48,6 @@ public class UpdateTaskPacket implements IPacket {
         data.updateTask(team.getTeamId(), task);
 
         // Notify players who are newly assigned to this task
-        @SuppressWarnings("unchecked")
         List<EntityPlayerMP> online = MinecraftServer.getServer()
             .getConfigurationManager().playerEntityList;
         for (UUID assigneeId : task.assignees) {

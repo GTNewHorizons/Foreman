@@ -1,7 +1,5 @@
 package com.eldrinn.foreman.network;
 
-import java.io.IOException;
-
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.PacketBuffer;
 
@@ -14,10 +12,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class OpenGuiPacket implements IPacket {
 
     @Override
-    public void encode(PacketBuffer buf) throws IOException {}
+    public void encode(PacketBuffer buf) {}
 
     @Override
-    public void decode(PacketBuffer buf) throws IOException {}
+    public void decode(PacketBuffer buf) {}
 
     @Override
     @SideOnly(Side.CLIENT)

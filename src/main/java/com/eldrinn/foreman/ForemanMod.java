@@ -1,8 +1,5 @@
 package com.eldrinn.foreman;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.eldrinn.foreman.proxy.CommonProxy;
 
 import cpw.mods.fml.common.Mod;
@@ -15,8 +12,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 public class ForemanMod {
 
     public static final String MODID = "foreman";
-    public static final Logger LOG = LogManager.getLogger(MODID);
 
+    @SuppressWarnings("unused") // assigned by FML via @SidedProxy reflection
     @SidedProxy(
         clientSide = "com.eldrinn.foreman.proxy.ClientProxy",
         serverSide = "com.eldrinn.foreman.proxy.CommonProxy")

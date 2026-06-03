@@ -103,7 +103,6 @@ public class ForemanCommand extends CommandBase {
                     return;
                 }
                 // Re-sends each online player their team's current task list.
-                @SuppressWarnings("unchecked")
                 List<EntityPlayerMP> online = MinecraftServer.getServer()
                     .getConfigurationManager().playerEntityList;
                 for (EntityPlayerMP player : online) {
@@ -128,11 +127,10 @@ public class ForemanCommand extends CommandBase {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.create"));
                     return;
                 }
-                if (!(sender instanceof EntityPlayerMP)) {
+                if (!(sender instanceof EntityPlayerMP player)) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.must_be_player"));
                     return;
                 }
-                EntityPlayerMP player = (EntityPlayerMP) sender;
                 Team team = TeamManager.getTeamByPlayer(player.getUniqueID());
                 if (team == null) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.not_in_team"));
@@ -260,7 +258,11 @@ public class ForemanCommand extends CommandBase {
                         .getSaveHandler()
                         .getWorldDirectory(),
                     "foreman");
-                dir.mkdirs();
+                if (!dir.exists() && !dir.mkdirs()) {
+                    sender.addChatMessage(
+                        new ChatComponentTranslation("foreman.cmd.export_failed", "could not create directory"));
+                    return;
+                }
                 String filename = args.length >= 2 ? args[1] : "export";
                 File out = new File(dir, filename + ".json");
                 try (Writer w = new OutputStreamWriter(new FileOutputStream(out), StandardCharsets.UTF_8)) {
@@ -277,11 +279,10 @@ public class ForemanCommand extends CommandBase {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.import"));
                     return;
                 }
-                if (!(sender instanceof EntityPlayerMP)) {
+                if (!(sender instanceof EntityPlayerMP player)) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.must_be_player"));
                     return;
                 }
-                EntityPlayerMP player = (EntityPlayerMP) sender;
                 Team team = TeamManager.getTeamByPlayer(player.getUniqueID());
                 if (team == null) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.not_in_team"));
@@ -369,8 +370,7 @@ public class ForemanCommand extends CommandBase {
 
     /** Console sender is always considered OP. */
     private boolean isOp(ICommandSender sender) {
-        if (!(sender instanceof EntityPlayerMP)) return true;
-        EntityPlayerMP player = (EntityPlayerMP) sender;
+        if (!(sender instanceof EntityPlayerMP player)) return true;
         return MinecraftServer.getServer()
             .getConfigurationManager()
             .func_152596_g(player.getGameProfile());

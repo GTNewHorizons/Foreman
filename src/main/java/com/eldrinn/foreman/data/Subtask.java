@@ -8,8 +8,8 @@ import net.minecraft.network.PacketBuffer;
 
 public class Subtask {
 
-    public UUID id;
-    public String title;
+    public final UUID id;
+    public final String title;
     public boolean checked;
 
     public Subtask(UUID id, String title, boolean checked) {

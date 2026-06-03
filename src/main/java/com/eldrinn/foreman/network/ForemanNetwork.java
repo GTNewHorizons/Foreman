@@ -26,7 +26,6 @@ public class ForemanNetwork {
      * Sends a packet to all online members of the given team.
      * Members who are offline are skipped silently.
      */
-    @SuppressWarnings("unchecked")
     public static void sendToTeamMembers(Set<UUID> memberUuids, IPacket packet) {
         List<EntityPlayerMP> online = MinecraftServer.getServer()
             .getConfigurationManager().playerEntityList;

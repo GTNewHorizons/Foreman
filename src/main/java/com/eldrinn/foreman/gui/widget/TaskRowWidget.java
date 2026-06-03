@@ -103,8 +103,8 @@ public class TaskRowWidget extends Flow {
         int assigneeW = assigneeBlockWidth(task);
         int maxTitleW = width - used - leftPad - assigneeW;
         int titlePixelW = Minecraft.getMinecraft().fontRenderer.getStringWidth(title) + 4;
-        TextWidget titleLabel = new TextWidget(title);
-        titleLabel.alignment(Alignment.CenterLeft);
+        var titleLabel = new TextWidget<>(title);
+        titleLabel.textAlign(Alignment.CenterLeft);
         titleLabel.marginLeft(leftPad);
         titleLabel.size(Math.min(titlePixelW, maxTitleW), 20);
         row.child(titleLabel);
@@ -116,9 +116,9 @@ public class TaskRowWidget extends Flow {
                 String more = String.format(
                     net.minecraft.util.StatCollector.translateToLocal("foreman.gui.row.more"),
                     task.assignees.size() - 2);
-                TextWidget moreLabel = new TextWidget(more);
+                var moreLabel = new TextWidget<>(more);
                 moreLabel.size(30, 20);
-                moreLabel.alignment(Alignment.CenterLeft);
+                moreLabel.textAlign(Alignment.CenterLeft);
                 row.child(moreLabel);
                 break;
             }
@@ -128,9 +128,9 @@ public class TaskRowWidget extends Flow {
                     new PlayerHeadWidget(name).size(HEAD_SIZE, HEAD_SIZE)
                         .marginTop(6)
                         .marginLeft(HEAD_GAP));
-                TextWidget nameLabel = new TextWidget("[" + name + "]");
+                var nameLabel = new TextWidget<>("[" + name + "]");
                 nameLabel.size(nameTextWidth(name), 20);
-                nameLabel.alignment(Alignment.CenterLeft);
+                nameLabel.textAlign(Alignment.CenterLeft);
                 nameLabel.marginLeft(HEAD_GAP);
                 row.child(nameLabel);
             }

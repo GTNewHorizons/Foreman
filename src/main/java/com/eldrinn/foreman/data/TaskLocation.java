@@ -9,7 +9,7 @@ public class TaskLocation {
 
     public int dimension;
     public int x, y, z;
-    public String label;
+    public final String label;
 
     public TaskLocation(int dimension, int x, int y, int z, String label) {
         this.dimension = dimension;

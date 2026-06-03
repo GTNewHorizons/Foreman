@@ -86,8 +86,12 @@ public class PinnedTasksConfig {
 
     public void save() {
         File file = configFile();
-        file.getParentFile()
-            .mkdirs();
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists() && !parentDir.mkdirs()) {
+            org.apache.logging.log4j.LogManager.getLogger("foreman")
+                .warn("Could not create config directory: {}", parentDir);
+            return;
+        }
         try (FileWriter writer = new FileWriter(file)) {
             GSON.toJson(data, writer);
         } catch (IOException e) {
@@ -110,13 +114,12 @@ public class PinnedTasksConfig {
         return data.pinnedTasks.contains(id.toString());
     }
 
-    public boolean pin(UUID id) {
+    public void pin(UUID id) {
         String s = id.toString();
-        if (data.pinnedTasks.contains(s)) return false;
-        if (data.pinnedTasks.size() >= MAX_PINS) return false;
+        if (data.pinnedTasks.contains(s)) return;
+        if (data.pinnedTasks.size() >= MAX_PINS) return;
         data.pinnedTasks.add(s);
         save();
-        return true;
     }
 
     public void unpin(UUID id) {

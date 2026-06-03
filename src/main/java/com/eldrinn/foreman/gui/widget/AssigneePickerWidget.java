@@ -28,48 +28,46 @@ public class AssigneePickerWidget extends Flow {
 
     public AssigneePickerWidget(Task task, ForemanGuiData data, int width) {
         super(com.cleanroommc.modularui.api.GuiAxis.Y);
-        final int W = width;
-        size(W, 20);
+        size(width, 20);
         coverChildrenHeight(20);
         final int HEAD_SIZE = 8;
         final int GAP = 4;
         final int CHECK_W = net.minecraft.client.Minecraft.getMinecraft().fontRenderer.getStringWidth("[x]");
-        final int NAME_W = W - GAP - CHECK_W - GAP - HEAD_SIZE - GAP;
+        final int NAME_W = width - GAP - CHECK_W - GAP - HEAD_SIZE - GAP;
 
         for (PlayerEntry player : resolveAvailablePlayers()) {
-            boolean assigned = task.assignees.contains(player.id);
-            PlayerEntry p = player;
+            boolean assigned = task.assignees.contains(player.id());
 
-            TextWidget checkMark = new TextWidget(assigned ? "[x]" : "[ ]");
+            var checkMark = new TextWidget<>(assigned ? "[x]" : "[ ]");
             checkMark.size(CHECK_W, 20);
-            checkMark.alignment(Alignment.CenterLeft);
+            checkMark.textAlign(Alignment.CenterLeft);
             checkMark.marginLeft(GAP);
 
-            PlayerHeadWidget head = new PlayerHeadWidget(p.name);
+            PlayerHeadWidget head = new PlayerHeadWidget(player.name());
             head.size(HEAD_SIZE, HEAD_SIZE)
                 .marginTop(6)
                 .marginLeft(GAP);
 
-            TextWidget nameLabel = new TextWidget(p.name);
+            var nameLabel = new TextWidget<>(player.name());
             nameLabel.size(NAME_W, 20);
-            nameLabel.alignment(Alignment.CenterLeft);
+            nameLabel.textAlign(Alignment.CenterLeft);
             nameLabel.marginLeft(GAP);
 
             Flow row = Flow.row()
-                .size(W, 20);
+                .size(width, 20);
             row.child(checkMark);
             row.child(head);
             row.child(nameLabel);
 
             child(
-                new ButtonWidget<>().size(W, 20)
+                new ButtonWidget<>().size(width, 20)
                     .child(row)
                     .onMousePressed(btn -> {
                         if (btn != 0) return false;
-                        if (task.assignees.contains(p.id)) {
-                            task.assignees.remove(p.id);
+                        if (task.assignees.contains(player.id())) {
+                            task.assignees.remove(player.id());
                         } else {
-                            task.assignees.add(p.id);
+                            task.assignees.add(player.id());
                         }
                         ForemanNetwork.CHANNEL.sendToServer(new UpdateTaskPacket(task));
                         ForemanGui.open(data);

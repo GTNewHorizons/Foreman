@@ -49,7 +49,7 @@ public class TaskDetailWidget extends Flow {
     @SuppressWarnings("rawtypes")
     private final ListWidget formList;
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public TaskDetailWidget(ForemanGuiData data) {
         super(com.cleanroommc.modularui.api.GuiAxis.Y);
         this.data = data;
@@ -75,15 +75,16 @@ public class TaskDetailWidget extends Flow {
             if (found != null) {
                 buildForm();
             } else {
-                formList.child(new TextWidget(t("foreman.gui.not_found")));
+                formList.child(new TextWidget<>(t("foreman.gui.not_found")));
             }
         } else {
             this.task = null;
             this.isNew = false;
-            formList.child(new TextWidget(t("foreman.gui.placeholder")));
+            formList.child(new TextWidget<>(t("foreman.gui.placeholder")));
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void buildForm() {
         // Reserve space for the vertical scrollbar so it doesn't overlap content
         final int W = ForemanGui.LEFT_WIDTH - 2 * ForemanGui.PADDING - SCROLLBAR_W;
@@ -106,7 +107,7 @@ public class TaskDetailWidget extends Flow {
                     return true;
                 }));
 
-        TextWidget headerGap = new TextWidget("");
+        var headerGap = new TextWidget<>("");
         headerGap.size(HEADER_GAP, EL_H);
         header.child(headerGap);
 
@@ -173,7 +174,7 @@ public class TaskDetailWidget extends Flow {
         formList.child(header);
 
         // Description
-        TextWidget descLabel = new TextWidget(t("foreman.gui.detail.description"));
+        var descLabel = new TextWidget<>(t("foreman.gui.detail.description"));
         descLabel.size(W, 14);
         formList.child(descLabel);
         PlainTextField descField = new PlainTextField();
@@ -186,7 +187,7 @@ public class TaskDetailWidget extends Flow {
         formList.child(descField);
 
         // Status buttons
-        TextWidget statusLabel = new TextWidget(t("foreman.gui.detail.status"));
+        var statusLabel = new TextWidget<>(t("foreman.gui.detail.status"));
         statusLabel.size(W, 14);
         formList.child(statusLabel);
         Flow statusRow = Flow.row()
@@ -197,13 +198,13 @@ public class TaskDetailWidget extends Flow {
         for (int i = 0; i < statuses.length; i++) {
             TaskStatus status = statuses[i];
             int btnW = (i == statuses.length - 1) ? STATUS_LAST_W : STATUS_BTN_W;
-            TextWidget normalLabel = new TextWidget(status.displayName());
+            var normalLabel = new TextWidget<>(status.displayName());
             normalLabel.size(btnW, EL_H);
-            normalLabel.alignment(Alignment.Center);
+            normalLabel.textAlign(Alignment.Center);
             normalLabel.color(0xFFFFFF);
-            TextWidget activeLabel = new TextWidget(status.displayName());
+            var activeLabel = new TextWidget<>(status.displayName());
             activeLabel.size(btnW, EL_H);
-            activeLabel.alignment(Alignment.Center);
+            activeLabel.textAlign(Alignment.Center);
             activeLabel.color(0xFFFFFF);
             statusRow.child(
                 new ToggleButton().size(btnW, EL_H)
@@ -220,7 +221,7 @@ public class TaskDetailWidget extends Flow {
         formList.child(statusRow);
 
         // Assignees
-        TextWidget assigneesLabel = new TextWidget(t("foreman.gui.detail.assignees"));
+        var assigneesLabel = new TextWidget<>(t("foreman.gui.detail.assignees"));
         assigneesLabel.size(W, 14);
         formList.child(assigneesLabel);
         formList.child(new AssigneePickerWidget(task, data, W));
@@ -230,15 +231,15 @@ public class TaskDetailWidget extends Flow {
         final int MAP_GAP = 4;
         Flow locationHeader = Flow.row()
             .size(W, ROW_H);
-        TextWidget locationLabel = new TextWidget(t("foreman.gui.detail.location"));
+        var locationLabel = new TextWidget<>(t("foreman.gui.detail.location"));
         locationLabel.size(W - MAP_LABEL_W - MAP_GAP - EL_H, EL_H);
-        locationLabel.alignment(Alignment.CenterLeft);
+        locationLabel.textAlign(Alignment.CenterLeft);
         locationHeader.child(locationLabel);
-        TextWidget showMapLabel = new TextWidget(t("foreman.gui.detail.show_on_map"));
+        var showMapLabel = new TextWidget<>(t("foreman.gui.detail.show_on_map"));
         showMapLabel.size(MAP_LABEL_W, EL_H);
-        showMapLabel.alignment(Alignment.CenterRight);
+        showMapLabel.textAlign(Alignment.CenterRight);
         locationHeader.child(showMapLabel);
-        TextWidget mapSpacer = new TextWidget("");
+        var mapSpacer = new TextWidget<>("");
         mapSpacer.size(MAP_GAP, EL_H);
         locationHeader.child(mapSpacer);
         locationHeader.child(
@@ -252,7 +253,7 @@ public class TaskDetailWidget extends Flow {
         formList.child(buildLocationRow());
 
         // Subtasks
-        TextWidget subtasksLabel = new TextWidget(t("foreman.gui.detail.subtasks"));
+        var subtasksLabel = new TextWidget<>(t("foreman.gui.detail.subtasks"));
         subtasksLabel.size(W, 14);
         formList.child(subtasksLabel);
         formList.child(buildSubtaskList());
@@ -268,57 +269,57 @@ public class TaskDetailWidget extends Flow {
         Flow row = Flow.row()
             .size(W, ROW_H);
 
-        TextWidget xLabel = new TextWidget("x:");
+        var xLabel = new TextWidget<>("x:");
         xLabel.size(LABEL_W, EL_H);
-        xLabel.alignment(Alignment.CenterLeft);
+        xLabel.textAlign(Alignment.CenterLeft);
         row.child(xLabel);
         PlainTextField xField = new PlainTextField();
         xField.size(FIELD_W, EL_H);
         xField.setTextColor(0xFFFFFF);
         xField.value(new StringValue.Dynamic(() -> String.valueOf(task.location != null ? task.location.x : 0), val -> {
-            ensureLocation();
+            TaskLocation loc = ensureLocation();
             try {
-                task.location.x = Integer.parseInt(val.trim());
+                loc.x = Integer.parseInt(val.trim());
                 sendUpdate();
             } catch (NumberFormatException ignored) {}
         }));
         row.child(xField);
 
         // gap before y:
-        TextWidget gap1 = new TextWidget("");
+        var gap1 = new TextWidget<>("");
         gap1.size(GAP_W, EL_H);
         row.child(gap1);
-        TextWidget yLabel = new TextWidget("y:");
+        var yLabel = new TextWidget<>("y:");
         yLabel.size(LABEL_W, EL_H);
-        yLabel.alignment(Alignment.CenterLeft);
+        yLabel.textAlign(Alignment.CenterLeft);
         row.child(yLabel);
         PlainTextField yField = new PlainTextField();
         yField.size(FIELD_W, EL_H);
         yField.setTextColor(0xFFFFFF);
         yField.value(new StringValue.Dynamic(() -> String.valueOf(task.location != null ? task.location.y : 0), val -> {
-            ensureLocation();
+            TaskLocation loc = ensureLocation();
             try {
-                task.location.y = Integer.parseInt(val.trim());
+                loc.y = Integer.parseInt(val.trim());
                 sendUpdate();
             } catch (NumberFormatException ignored) {}
         }));
         row.child(yField);
 
         // gap before z:
-        TextWidget gap2 = new TextWidget("");
+        var gap2 = new TextWidget<>("");
         gap2.size(GAP_W, EL_H);
         row.child(gap2);
-        TextWidget zLabel = new TextWidget("z:");
+        var zLabel = new TextWidget<>("z:");
         zLabel.size(LABEL_W, EL_H);
-        zLabel.alignment(Alignment.CenterLeft);
+        zLabel.textAlign(Alignment.CenterLeft);
         row.child(zLabel);
         PlainTextField zField = new PlainTextField();
         zField.size(FIELD_W, EL_H);
         zField.setTextColor(0xFFFFFF);
         zField.value(new StringValue.Dynamic(() -> String.valueOf(task.location != null ? task.location.z : 0), val -> {
-            ensureLocation();
+            TaskLocation loc = ensureLocation();
             try {
-                task.location.z = Integer.parseInt(val.trim());
+                loc.z = Integer.parseInt(val.trim());
                 sendUpdate();
             } catch (NumberFormatException ignored) {}
         }));
@@ -326,9 +327,9 @@ public class TaskDetailWidget extends Flow {
 
         // Pos button fills remaining space
         final int actualPosW = W - 3 * LABEL_W - 3 * FIELD_W - 2 * GAP_W;
-        TextWidget posLabel = new TextWidget(t("foreman.gui.detail.pos"));
+        var posLabel = new TextWidget<>(t("foreman.gui.detail.pos"));
         posLabel.size(actualPosW, EL_H);
-        posLabel.alignment(Alignment.Center);
+        posLabel.textAlign(Alignment.Center);
         posLabel.color(0xFFFFFF);
         row.child(
             new ButtonWidget<>().size(actualPosW, EL_H)
@@ -336,11 +337,11 @@ public class TaskDetailWidget extends Flow {
                 .onMousePressed(btn -> {
                     if (btn != 0) return false;
                     EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-                    ensureLocation();
-                    task.location.x = (int) p.posX;
-                    task.location.y = (int) p.posY;
-                    task.location.z = (int) p.posZ;
-                    task.location.dimension = p.worldObj.provider.dimensionId;
+                    TaskLocation loc = ensureLocation();
+                    loc.x = (int) p.posX;
+                    loc.y = (int) p.posY;
+                    loc.z = (int) p.posZ;
+                    loc.dimension = p.worldObj.provider.dimensionId;
                     sendUpdate();
                     ForemanGui.open(data);
                     return true;
@@ -356,20 +357,19 @@ public class TaskDetailWidget extends Flow {
         col.coverChildrenHeight(ROW_H);
 
         for (Subtask sub : task.subtasks) {
-            Subtask s = sub;
-            TextWidget subtaskTitle = new TextWidget(s.title);
+            var subtaskTitle = new TextWidget<>(sub.title);
             subtaskTitle.size(W - EL_H * 2, EL_H);
-            subtaskTitle.alignment(Alignment.CenterLeft);
+            subtaskTitle.textAlign(Alignment.CenterLeft);
             subtaskTitle.marginLeft(4);
             ButtonWidget<?> checkBtn = new ButtonWidget<>();
             checkBtn.size(EL_H, EL_H);
-            if (s.checked) checkBtn.overlay(GuiTextures.CHECKMARK);
+            if (sub.checked) checkBtn.overlay(GuiTextures.CHECKMARK);
             col.child(
                 Flow.row()
                     .size(W, ROW_H)
                     .child(checkBtn.onMousePressed(btn -> {
                         if (btn != 0) return false;
-                        s.checked = !s.checked;
+                        sub.checked = !sub.checked;
                         sendUpdate();
                         ForemanGui.open(data);
                         return true;
@@ -380,7 +380,7 @@ public class TaskDetailWidget extends Flow {
                             .overlay(ICON_REMOVE)
                             .onMousePressed(btn -> {
                                 if (btn != 0) return false;
-                                task.subtasks.remove(s);
+                                task.subtasks.remove(sub);
                                 sendUpdate();
                                 ForemanGui.open(data);
                                 return true;
@@ -414,10 +414,11 @@ public class TaskDetailWidget extends Flow {
         return col;
     }
 
-    private void ensureLocation() {
+    private TaskLocation ensureLocation() {
         if (task.location == null) {
             task.location = new TaskLocation(0, 0, 0, 0, "");
         }
+        return task.location;
     }
 
     private static String t(String key) {

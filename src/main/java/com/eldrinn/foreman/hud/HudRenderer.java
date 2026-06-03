@@ -172,33 +172,19 @@ public class HudRenderer {
     }
 
     static int anchorX(PinnedTasksConfig.Anchor anchor, int sw, int blockW) {
-        switch (anchor) {
-            case TOP_LEFT:
-            case MIDDLE_LEFT:
-            case BOTTOM_LEFT:
-                return 2;
-            case TOP_CENTER:
-            case MIDDLE_CENTER:
-            case BOTTOM_CENTER:
-                return (sw - blockW) / 2;
-            default: // RIGHT
-                return sw - blockW - 2;
-        }
+        return switch (anchor) {
+            case TOP_LEFT, MIDDLE_LEFT, BOTTOM_LEFT -> 2;
+            case TOP_CENTER, MIDDLE_CENTER, BOTTOM_CENTER -> (sw - blockW) / 2;
+            default -> sw - blockW - 2; // RIGHT
+        };
     }
 
     static int anchorY(PinnedTasksConfig.Anchor anchor, int sh, int totalH) {
-        switch (anchor) {
-            case TOP_LEFT:
-            case TOP_CENTER:
-            case TOP_RIGHT:
-                return 2;
-            case MIDDLE_LEFT:
-            case MIDDLE_CENTER:
-            case MIDDLE_RIGHT:
-                return (sh - totalH) / 2;
-            default: // BOTTOM
-                return sh - totalH - 2;
-        }
+        return switch (anchor) {
+            case TOP_LEFT, TOP_CENTER, TOP_RIGHT -> 2;
+            case MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT -> (sh - totalH) / 2;
+            default -> sh - totalH - 2; // BOTTOM
+        };
     }
 
     private void drawItemIcon(ItemStack stack, int x, int y) {
@@ -219,13 +205,10 @@ public class HudRenderer {
     }
 
     private int statusColor(TaskStatus status) {
-        switch (status) {
-            case IN_PROGRESS:
-                return COLOR_YELLOW;
-            case DONE:
-                return COLOR_GREEN;
-            default:
-                return COLOR_GRAY;
-        }
+        return switch (status) {
+            case IN_PROGRESS -> COLOR_YELLOW;
+            case DONE -> COLOR_GREEN;
+            default -> COLOR_GRAY;
+        };
     }
 }

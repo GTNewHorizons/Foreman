@@ -76,13 +76,11 @@ public class ForemanWorldData extends WorldSavedData {
         }
     }
 
-    public boolean deleteTask(UUID teamId, UUID taskId) {
+    public void deleteTask(UUID teamId, UUID taskId) {
         LinkedHashMap<UUID, Task> map = teamTasks.get(teamId);
         if (map != null && map.remove(taskId) != null) {
             markDirty();
-            return true;
         }
-        return false;
     }
 
     /** Called on TeamMergeEvent — moves all tasks from consumed team to surviving team. */

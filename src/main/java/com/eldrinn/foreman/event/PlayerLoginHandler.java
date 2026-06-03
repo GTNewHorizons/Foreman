@@ -15,8 +15,7 @@ public class PlayerLoginHandler {
 
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!(event.player instanceof EntityPlayerMP)) return;
-        EntityPlayerMP player = (EntityPlayerMP) event.player;
+        if (!(event.player instanceof EntityPlayerMP player)) return;
 
         Team team = TeamManager.getTeamByPlayer(player.getUniqueID());
         if (team == null) return; // GTNHTeams hasn't initialized yet — rare edge case

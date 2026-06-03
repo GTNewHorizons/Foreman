@@ -1,6 +1,5 @@
 package com.eldrinn.foreman.network;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,13 +22,13 @@ public class DeleteTaskPacket implements IPacket {
     }
 
     @Override
-    public void encode(PacketBuffer buf) throws IOException {
+    public void encode(PacketBuffer buf) {
         buf.writeLong(taskId.getMostSignificantBits());
         buf.writeLong(taskId.getLeastSignificantBits());
     }
 
     @Override
-    public void decode(PacketBuffer buf) throws IOException {
+    public void decode(PacketBuffer buf) {
         taskId = new UUID(buf.readLong(), buf.readLong());
     }
 

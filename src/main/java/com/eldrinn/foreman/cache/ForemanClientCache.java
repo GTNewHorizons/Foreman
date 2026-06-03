@@ -23,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ForemanClientCache {
 
-    private static Map<UUID, Task> tasks = new LinkedHashMap<>();
+    private static final Map<UUID, Task> tasks = new LinkedHashMap<>();
     private static final PinnedTasksConfig pinConfig = new PinnedTasksConfig();
 
     public static void loadConfig() {
@@ -53,8 +53,8 @@ public class ForemanClientCache {
 
     // --- Pin API ---
 
-    public static boolean pin(UUID id) {
-        return pinConfig.pin(id);
+    public static void pin(UUID id) {
+        pinConfig.pin(id);
     }
 
     public static void unpin(UUID id) {

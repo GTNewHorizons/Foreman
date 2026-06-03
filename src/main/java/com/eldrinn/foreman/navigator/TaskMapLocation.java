@@ -1,5 +1,6 @@
 package com.eldrinn.foreman.navigator;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import com.eldrinn.foreman.data.Task;
@@ -22,6 +23,7 @@ public class TaskMapLocation implements IWaypointAndLocationProvider {
     private boolean isActiveAsWaypoint;
 
     public TaskMapLocation(Task task) {
+        Objects.requireNonNull(task.location, "task must have a location to be shown on map");
         this.taskId = task.id;
         this.blockX = task.location.x + 0.5;
         this.blockZ = task.location.z + 0.5;
