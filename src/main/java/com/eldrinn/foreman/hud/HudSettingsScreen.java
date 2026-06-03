@@ -207,9 +207,29 @@ public class HudSettingsScreen extends GuiScreen {
     protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         if (button == 0 && dragging) {
             dragging = false;
-            ForemanClientCache.getPinConfig()
-                .save();
+            PinnedTasksConfig cfg = ForemanClientCache.getPinConfig();
+            ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            int sw = res.getScaledWidth();
+            int sh = res.getScaledHeight();
+            List<Task> pinned = ForemanClientCache.getPinnedTasks();
+            int blockW = HudRenderer.maxBlockWidth(pinned, fontRendererObj);
+            int totalH = HudRenderer.totalHeight(pinned);
+            int[] pos = HudRenderer.computeHudPosition(cfg, sw, sh, fontRendererObj, pinned);
+            int hudX = pos[0];
+            int hudY = pos[1];
+            PinnedTasksConfig.Anchor newAnchor = bestAnchor(hudX + blockW / 2, hudY + totalH / 2, sw, sh);
+            cfg.setAnchor(newAnchor);
+            cfg.setOffsetXRaw(hudX - HudRenderer.anchorX(newAnchor, sw, blockW));
+            cfg.setOffsetYRaw(hudY - HudRenderer.anchorY(newAnchor, sh, totalH));
+            cfg.save();
         }
+    }
+
+    private static PinnedTasksConfig.Anchor bestAnchor(int cx, int cy, int sw, int sh) {
+        boolean left = cx < sw / 2;
+        boolean top = cy < sh / 2;
+        if (top) return left ? PinnedTasksConfig.Anchor.TOP_LEFT : PinnedTasksConfig.Anchor.TOP_RIGHT;
+        return left ? PinnedTasksConfig.Anchor.BOTTOM_LEFT : PinnedTasksConfig.Anchor.BOTTOM_RIGHT;
     }
 
     @Override

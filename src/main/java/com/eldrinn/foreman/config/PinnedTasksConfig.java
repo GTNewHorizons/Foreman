@@ -189,6 +189,10 @@ public class PinnedTasksConfig {
         data.hud.offsetY = offsetY;
     }
 
+    public void setAnchor(Anchor anchor) {
+        data.hud.anchor = anchor.name();
+    }
+
     public void resetToDefaults() {
         data.hud.anchor = Anchor.TOP_RIGHT.name();
         data.hud.offsetX = 0;
