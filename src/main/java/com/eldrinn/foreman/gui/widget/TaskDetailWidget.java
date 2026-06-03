@@ -358,7 +358,7 @@ public class TaskDetailWidget extends Flow {
 
         for (Subtask sub : task.subtasks) {
             var subtaskTitle = new TextWidget<>(sub.title);
-            subtaskTitle.size(W - EL_H * 2, EL_H);
+            subtaskTitle.size(W - EL_H * 2 - 4, EL_H);
             subtaskTitle.textAlign(Alignment.CenterLeft);
             subtaskTitle.marginLeft(4);
             ButtonWidget<?> checkBtn = new ButtonWidget<>();
