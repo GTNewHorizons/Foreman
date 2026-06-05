@@ -265,6 +265,17 @@ public class ForemanCommand extends CommandBase {
                 }
                 String filename = args.length >= 2 ? args[1] : "export";
                 File out = new File(dir, filename + ".json");
+                try {
+                    if (!out.getCanonicalPath()
+                        .startsWith(dir.getCanonicalPath() + File.separator)) {
+                        sender
+                            .addChatMessage(new ChatComponentTranslation("foreman.cmd.export_failed", "invalid path"));
+                        return;
+                    }
+                } catch (IOException e) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.export_failed", e.getMessage()));
+                    return;
+                }
                 try (Writer w = new OutputStreamWriter(new FileOutputStream(out), StandardCharsets.UTF_8)) {
                     gson.toJson(arr, w);
                     sender.addChatMessage(
@@ -295,6 +306,16 @@ public class ForemanCommand extends CommandBase {
                         .getWorldDirectory(),
                     "foreman");
                 File in = new File(dir, args[1] + ".json");
+                try {
+                    if (!in.getCanonicalPath()
+                        .startsWith(dir.getCanonicalPath() + File.separator)) {
+                        sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.file_not_found", args[1]));
+                        return;
+                    }
+                } catch (IOException e) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.export_failed", e.getMessage()));
+                    return;
+                }
                 if (!in.exists()) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.file_not_found", in.getName()));
                     return;
