@@ -19,6 +19,7 @@ import com.eldrinn.foreman.config.PinnedTasksConfig;
 import com.eldrinn.foreman.data.Subtask;
 import com.eldrinn.foreman.data.Task;
 import com.eldrinn.foreman.data.TaskStatus;
+import com.eldrinn.foreman.gui.ColorUtils;
 import com.eldrinn.foreman.gui.widget.IconSlotWidget;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -36,11 +37,6 @@ public class HudRenderer {
     private static final int ICON_GAP = 2;
     private static final int BLOCK_GAP = 4;
     static final int PADDING = 4;
-
-    private static final int COLOR_WHITE = 0xFFFFFF;
-    private static final int COLOR_GRAY = 0xAAAAAA;
-    private static final int COLOR_YELLOW = 0xF0C040;
-    private static final int COLOR_GREEN = 0x8BC34A;
 
     @SubscribeEvent
     public void onRenderHud(RenderGameOverlayEvent.Post event) {
@@ -76,8 +72,12 @@ public class HudRenderer {
         int sy = (int) (startY / s);
 
         if (cfg.isShowBackground()) {
-            net.minecraft.client.gui.Gui
-                .drawRect(sx - PADDING, sy - PADDING, sx + blockW + PADDING, sy + totalHeight + PADDING, 0x88000000);
+            net.minecraft.client.gui.Gui.drawRect(
+                sx - PADDING,
+                sy - PADDING,
+                sx + blockW + PADDING,
+                sy + totalHeight + PADDING,
+                ColorUtils.BG_HUD.getColor());
         }
 
         int y = sy;
@@ -102,7 +102,6 @@ public class HudRenderer {
         return new int[] { x, y, blockW, totalH };
     }
 
-    @SuppressWarnings("unchecked")
     private int drawTaskBlock(FontRenderer fr, PinnedTasksConfig cfg, Task task, int x, int y, int blockW) {
         int maxSubtasks = cfg.getMaxSubtasksShown();
         int textW = blockW - PADDING * 2;
@@ -114,13 +113,13 @@ public class HudRenderer {
         ItemStack iconStack = IconSlotWidget.parseIconItem(task.iconItem);
         if (iconStack != null) {
             drawItemIcon(iconStack, x, y);
-            for (String line : (List<String>) fr.listFormattedStringToWidth(task.title, textW - ICON_SIZE - ICON_GAP)) {
-                fr.drawStringWithShadow(line, x + ICON_SIZE + ICON_GAP, y, COLOR_WHITE);
+            for (String line : fr.listFormattedStringToWidth(task.title, textW - ICON_SIZE - ICON_GAP)) {
+                fr.drawStringWithShadow(line, x + ICON_SIZE + ICON_GAP, y, ColorUtils.TEXT_WHITE.getColor());
                 y += LINE_H;
             }
         } else {
-            for (String line : (List<String>) fr.listFormattedStringToWidth(task.title, textW)) {
-                fr.drawStringWithShadow(line, x, y, COLOR_WHITE);
+            for (String line : fr.listFormattedStringToWidth(task.title, textW)) {
+                fr.drawStringWithShadow(line, x, y, ColorUtils.TEXT_WHITE.getColor());
                 y += LINE_H;
             }
         }
@@ -138,22 +137,26 @@ public class HudRenderer {
             int shown = 0;
             for (Subtask st : incomplete) {
                 if (shown >= maxSubtasks) break;
-                List<String> lines = (List<String>) fr.listFormattedStringToWidth(st.title, subtaskW);
-                fr.drawStringWithShadow("- " + lines.get(0), x + PADDING, y, COLOR_WHITE);
+                List<String> lines = fr.listFormattedStringToWidth(st.title, subtaskW);
+                fr.drawStringWithShadow("- " + lines.get(0), x + PADDING, y, ColorUtils.TEXT_WHITE.getColor());
                 y += LINE_H;
                 for (int i = 1; i < lines.size(); i++) {
-                    fr.drawStringWithShadow("  " + lines.get(i), x + PADDING, y, COLOR_WHITE);
+                    fr.drawStringWithShadow("  " + lines.get(i), x + PADDING, y, ColorUtils.TEXT_WHITE.getColor());
                     y += LINE_H;
                 }
                 shown++;
             }
             for (Subtask st : complete) {
                 if (shown >= maxSubtasks) break;
-                List<String> lines = (List<String>) fr.listFormattedStringToWidth(st.title, subtaskW);
-                fr.drawStringWithShadow("§m- " + lines.get(0) + "§r", x + PADDING, y, COLOR_GRAY);
+                List<String> lines = fr.listFormattedStringToWidth(st.title, subtaskW);
+                fr.drawStringWithShadow("§m- " + lines.get(0) + "§r", x + PADDING, y, ColorUtils.TEXT_GRAY.getColor());
                 y += LINE_H;
                 for (int i = 1; i < lines.size(); i++) {
-                    fr.drawStringWithShadow("§m  " + lines.get(i) + "§r", x + PADDING, y, COLOR_GRAY);
+                    fr.drawStringWithShadow(
+                        "§m  " + lines.get(i) + "§r",
+                        x + PADDING,
+                        y,
+                        ColorUtils.TEXT_GRAY.getColor());
                     y += LINE_H;
                 }
                 shown++;
@@ -165,7 +168,7 @@ public class HudRenderer {
                     StatCollector.translateToLocalFormatted("foreman.gui.row.more", remaining),
                     x + PADDING,
                     y,
-                    COLOR_GRAY);
+                    ColorUtils.TEXT_GRAY.getColor());
                 y += LINE_H;
             }
         }
@@ -173,7 +176,6 @@ public class HudRenderer {
         return y;
     }
 
-    @SuppressWarnings("unchecked")
     static int totalHeight(List<Task> pinned, PinnedTasksConfig cfg, FontRenderer fr) {
         int maxSub = cfg.getMaxSubtasksShown();
         int blockW = maxBlockWidth(pinned, fr, cfg);
@@ -184,24 +186,27 @@ public class HudRenderer {
         for (Task t : pinned) {
             h += LINE_H; // status
             int titleW = t.iconItem != null ? textW - ICON_SIZE - ICON_GAP : textW;
-            h += LINE_H * ((List<String>) fr.listFormattedStringToWidth(t.title, titleW)).size();
+            h += LINE_H * fr.listFormattedStringToWidth(t.title, titleW)
+                .size();
 
-            List<com.eldrinn.foreman.data.Subtask> incomplete = t.subtasks.stream()
+            List<Subtask> incomplete = t.subtasks.stream()
                 .filter(st -> !st.checked)
                 .collect(java.util.stream.Collectors.toList());
-            List<com.eldrinn.foreman.data.Subtask> complete = t.subtasks.stream()
+            List<Subtask> complete = t.subtasks.stream()
                 .filter(st -> st.checked)
                 .collect(java.util.stream.Collectors.toList());
 
             int shown = 0;
-            for (com.eldrinn.foreman.data.Subtask st : incomplete) {
+            for (Subtask st : incomplete) {
                 if (shown >= maxSub) break;
-                h += LINE_H * ((List<String>) fr.listFormattedStringToWidth(st.title, subtaskW)).size();
+                h += LINE_H * fr.listFormattedStringToWidth(st.title, subtaskW)
+                    .size();
                 shown++;
             }
-            for (com.eldrinn.foreman.data.Subtask st : complete) {
+            for (Subtask st : complete) {
                 if (shown >= maxSub) break;
-                h += LINE_H * ((List<String>) fr.listFormattedStringToWidth(st.title, subtaskW)).size();
+                h += LINE_H * fr.listFormattedStringToWidth(st.title, subtaskW)
+                    .size();
                 shown++;
             }
             if (t.subtasks.size() > shown) h += LINE_H; // "+N more"
@@ -266,9 +271,9 @@ public class HudRenderer {
 
     private int statusColor(TaskStatus status) {
         return switch (status) {
-            case IN_PROGRESS -> COLOR_YELLOW;
-            case DONE -> COLOR_GREEN;
-            default -> COLOR_GRAY;
+            case IN_PROGRESS -> ColorUtils.GOLD.getColor();
+            case DONE -> ColorUtils.GREEN.getColor();
+            default -> ColorUtils.TEXT_GRAY.getColor();
         };
     }
 }

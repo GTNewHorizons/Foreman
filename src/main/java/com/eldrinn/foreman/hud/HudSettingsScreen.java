@@ -14,6 +14,7 @@ import com.cleanroommc.modularui.drawable.GuiTextures;
 import com.eldrinn.foreman.cache.ForemanClientCache;
 import com.eldrinn.foreman.config.PinnedTasksConfig;
 import com.eldrinn.foreman.data.Task;
+import com.eldrinn.foreman.gui.ColorUtils;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -38,7 +39,7 @@ public class HudSettingsScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawRect(0, 0, width, height, 0x44000000);
+        drawRect(0, 0, width, height, ColorUtils.BG_OVERLAY.getColor());
 
         PinnedTasksConfig cfg = ForemanClientCache.getPinConfig();
         ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -46,12 +47,16 @@ public class HudSettingsScreen extends GuiScreen {
         int sh = res.getScaledHeight();
 
         String hint = StatCollector.translateToLocal("foreman.hud.settings.hint");
-        fontRendererObj.drawStringWithShadow(hint, (sw - fontRendererObj.getStringWidth(hint)) / 2, 6, 0xAAAAAA);
+        fontRendererObj.drawStringWithShadow(
+            hint,
+            (sw - fontRendererObj.getStringWidth(hint)) / 2,
+            6,
+            ColorUtils.TEXT_GRAY.getColor());
 
         int[] pos = hudPos(cfg, sw, sh);
         int hx = pos[0];
         int hy = pos[1];
-        drawRect(hx, hy, hx + HANDLE_SIZE, hy + HANDLE_SIZE, 0xFFCC3333);
+        drawRect(hx, hy, hx + HANDLE_SIZE, hy + HANDLE_SIZE, ColorUtils.HANDLE.getColor());
         GL11.glColor4f(1f, 1f, 1f, 1f);
         GuiTextures.ALL_DIRECTIONS.draw(hx, hy, HANDLE_SIZE, HANDLE_SIZE);
         GL11.glColor4f(1f, 1f, 1f, 1f);
@@ -71,59 +76,59 @@ public class HudSettingsScreen extends GuiScreen {
         int px = (sw - panelW) / 2;
         int py = sh - PANEL_H - PANEL_PADDING;
 
-        drawRect(px - 4, py - 4, px + panelW + 4, py + PANEL_H + 4, 0xCC000000);
+        drawRect(px - 4, py - 4, px + panelW + 4, py + PANEL_H + 4, ColorUtils.BG_PANEL.getColor());
 
         int cx = px;
 
         // Scale
         String scaleKey = StatCollector.translateToLocal("foreman.hud.settings.scale");
-        fontRendererObj.drawStringWithShadow(scaleKey, cx, py + 7, 0xAAAAAA);
+        fontRendererObj.drawStringWithShadow(scaleKey, cx, py + 7, ColorUtils.TEXT_GRAY.getColor());
         cx += fontRendererObj.getStringWidth(scaleKey) + 4;
 
-        drawRect(cx, py + 2, cx + 14, py + 22, 0xFF444444);
-        fontRendererObj.drawStringWithShadow("-", cx + 4, py + 7, 0xFFFFFF);
+        drawRect(cx, py + 2, cx + 14, py + 22, ColorUtils.BG_BUTTON.getColor());
+        fontRendererObj.drawStringWithShadow("-", cx + 4, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += 16;
 
         String scaleLabel = String.format("%.2fx", cfg.getScale());
-        fontRendererObj.drawStringWithShadow(scaleLabel, cx, py + 7, 0xFFFFFF);
+        fontRendererObj.drawStringWithShadow(scaleLabel, cx, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += fontRendererObj.getStringWidth(scaleLabel) + 4;
 
-        drawRect(cx, py + 2, cx + 14, py + 22, 0xFF444444);
-        fontRendererObj.drawStringWithShadow("+", cx + 3, py + 7, 0xFFFFFF);
+        drawRect(cx, py + 2, cx + 14, py + 22, ColorUtils.BG_BUTTON.getColor());
+        fontRendererObj.drawStringWithShadow("+", cx + 3, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += 20;
 
         // Subtasks
         String subtasksKey = StatCollector.translateToLocal("foreman.hud.settings.subtasks");
-        fontRendererObj.drawStringWithShadow(subtasksKey, cx, py + 7, 0xAAAAAA);
+        fontRendererObj.drawStringWithShadow(subtasksKey, cx, py + 7, ColorUtils.TEXT_GRAY.getColor());
         cx += fontRendererObj.getStringWidth(subtasksKey) + 4;
 
-        drawRect(cx, py + 2, cx + 14, py + 22, 0xFF444444);
-        fontRendererObj.drawStringWithShadow("-", cx + 4, py + 7, 0xFFFFFF);
+        drawRect(cx, py + 2, cx + 14, py + 22, ColorUtils.BG_BUTTON.getColor());
+        fontRendererObj.drawStringWithShadow("-", cx + 4, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += 16;
 
         String subtasksLabel = String.valueOf(cfg.getMaxSubtasksShown());
-        fontRendererObj.drawStringWithShadow(subtasksLabel, cx, py + 7, 0xFFFFFF);
+        fontRendererObj.drawStringWithShadow(subtasksLabel, cx, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += fontRendererObj.getStringWidth(subtasksLabel) + 4;
 
-        drawRect(cx, py + 2, cx + 14, py + 22, 0xFF444444);
-        fontRendererObj.drawStringWithShadow("+", cx + 3, py + 7, 0xFFFFFF);
+        drawRect(cx, py + 2, cx + 14, py + 22, ColorUtils.BG_BUTTON.getColor());
+        fontRendererObj.drawStringWithShadow("+", cx + 3, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += 20;
 
         // Pins
         String pinsKey = StatCollector.translateToLocal("foreman.hud.settings.tasks");
-        fontRendererObj.drawStringWithShadow(pinsKey, cx, py + 7, 0xAAAAAA);
+        fontRendererObj.drawStringWithShadow(pinsKey, cx, py + 7, ColorUtils.TEXT_GRAY.getColor());
         cx += fontRendererObj.getStringWidth(pinsKey) + 4;
 
-        drawRect(cx, py + 2, cx + 14, py + 22, 0xFF444444);
-        fontRendererObj.drawStringWithShadow("-", cx + 4, py + 7, 0xFFFFFF);
+        drawRect(cx, py + 2, cx + 14, py + 22, ColorUtils.BG_BUTTON.getColor());
+        fontRendererObj.drawStringWithShadow("-", cx + 4, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += 16;
 
         String pinsLabel = String.valueOf(cfg.getMaxPinnedTasks());
-        fontRendererObj.drawStringWithShadow(pinsLabel, cx, py + 7, 0xFFFFFF);
+        fontRendererObj.drawStringWithShadow(pinsLabel, cx, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += fontRendererObj.getStringWidth(pinsLabel) + 4;
 
-        drawRect(cx, py + 2, cx + 14, py + 22, 0xFF444444);
-        fontRendererObj.drawStringWithShadow("+", cx + 3, py + 7, 0xFFFFFF);
+        drawRect(cx, py + 2, cx + 14, py + 22, ColorUtils.BG_BUTTON.getColor());
+        fontRendererObj.drawStringWithShadow("+", cx + 3, py + 7, ColorUtils.TEXT_WHITE.getColor());
         cx += 20;
 
         // BG toggle
@@ -131,8 +136,13 @@ public class HudSettingsScreen extends GuiScreen {
             "foreman.hud.settings.bg",
             cfg.isShowBackground() ? StatCollector.translateToLocal("foreman.hud.on")
                 : StatCollector.translateToLocal("foreman.hud.off"));
-        int bgColor = cfg.isShowBackground() ? 0xFF8BC34A : 0xFFAAAAAA;
-        drawRect(cx, py + 2, cx + fontRendererObj.getStringWidth(bgLabel) + 8, py + 22, 0xFF444444);
+        int bgColor = cfg.isShowBackground() ? ColorUtils.GREEN.getColor() : ColorUtils.TEXT_GRAY.getColor();
+        drawRect(
+            cx,
+            py + 2,
+            cx + fontRendererObj.getStringWidth(bgLabel) + 8,
+            py + 22,
+            ColorUtils.BG_BUTTON.getColor());
         fontRendererObj.drawStringWithShadow(bgLabel, cx + 4, py + 7, bgColor);
         cx += fontRendererObj.getStringWidth(bgLabel) + 12;
 
@@ -141,15 +151,25 @@ public class HudSettingsScreen extends GuiScreen {
             "foreman.hud.settings.hud",
             cfg.isHudVisible() ? StatCollector.translateToLocal("foreman.hud.on")
                 : StatCollector.translateToLocal("foreman.hud.off"));
-        int hudColor = cfg.isHudVisible() ? 0xFF8BC34A : 0xFFAAAAAA;
-        drawRect(cx, py + 2, cx + fontRendererObj.getStringWidth(hudLabel) + 8, py + 22, 0xFF444444);
+        int hudColor = cfg.isHudVisible() ? ColorUtils.GREEN.getColor() : ColorUtils.TEXT_GRAY.getColor();
+        drawRect(
+            cx,
+            py + 2,
+            cx + fontRendererObj.getStringWidth(hudLabel) + 8,
+            py + 22,
+            ColorUtils.BG_BUTTON.getColor());
         fontRendererObj.drawStringWithShadow(hudLabel, cx + 4, py + 7, hudColor);
         cx += fontRendererObj.getStringWidth(hudLabel) + 12;
 
         // Reset
         String resetLabel = StatCollector.translateToLocal("foreman.hud.settings.reset");
-        drawRect(cx, py + 2, cx + fontRendererObj.getStringWidth(resetLabel) + 8, py + 22, 0xFF884444);
-        fontRendererObj.drawStringWithShadow(resetLabel, cx + 4, py + 7, 0xFFFFFF);
+        drawRect(
+            cx,
+            py + 2,
+            cx + fontRendererObj.getStringWidth(resetLabel) + 8,
+            py + 22,
+            ColorUtils.BG_DANGER.getColor());
+        fontRendererObj.drawStringWithShadow(resetLabel, cx + 4, py + 7, ColorUtils.TEXT_WHITE.getColor());
     }
 
     @Override

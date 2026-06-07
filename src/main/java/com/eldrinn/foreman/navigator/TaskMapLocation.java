@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.eldrinn.foreman.data.Task;
 import com.eldrinn.foreman.data.TaskStatus;
+import com.eldrinn.foreman.gui.ColorUtils;
 import com.gtnewhorizons.navigator.api.model.locations.IWaypointAndLocationProvider;
 import com.gtnewhorizons.navigator.api.model.waypoints.Waypoint;
 
@@ -62,9 +63,9 @@ public class TaskMapLocation implements IWaypointAndLocationProvider {
     @Override
     public Waypoint toWaypoint() {
         int color = switch (status) {
-            case OPEN -> 0xFFAAAA;
-            case IN_PROGRESS -> 0xAAAAFF;
-            case DONE -> 0xAAFFAA;
+            case OPEN -> ColorUtils.MAP_WAYPOINT_OPEN.getColor();
+            case IN_PROGRESS -> ColorUtils.MAP_WAYPOINT_IN_PROGRESS.getColor();
+            case DONE -> ColorUtils.MAP_WAYPOINT_DONE.getColor();
         };
         return new Waypoint((int) blockX, 64, (int) blockZ, dimensionId, title, color);
     }
