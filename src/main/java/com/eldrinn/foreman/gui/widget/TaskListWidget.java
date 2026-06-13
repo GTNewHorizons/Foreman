@@ -17,6 +17,7 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.eldrinn.foreman.cache.ForemanClientCache;
 import com.eldrinn.foreman.data.Task;
 import com.eldrinn.foreman.data.TaskStatus;
+import com.eldrinn.foreman.gui.ColorUtils;
 import com.eldrinn.foreman.gui.ForemanGui;
 import com.eldrinn.foreman.gui.ForemanGuiData;
 
@@ -83,7 +84,7 @@ public class TaskListWidget extends Flow {
         if (data.searchExpanded) {
             PlainTextField searchField = new PlainTextField();
             searchField.size(W - SEARCH_BTN_W, 20);
-            searchField.setTextColor(0xFFFFFF);
+            searchField.setTextColor(ColorUtils.TEXT_WHITE.getColor());
             searchField.autoUpdateOnChange(true);
             searchField.value(new StringValue.Dynamic(() -> data.searchQuery, val -> {
                 data.searchQuery = val;

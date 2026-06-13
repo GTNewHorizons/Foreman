@@ -25,6 +25,7 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.eldrinn.foreman.cache.ForemanClientCache;
 import com.eldrinn.foreman.data.AssignedPlayer;
 import com.eldrinn.foreman.data.Task;
+import com.eldrinn.foreman.gui.ColorUtils;
 import com.eldrinn.foreman.gui.ForemanGui;
 import com.eldrinn.foreman.gui.ForemanGuiData;
 
@@ -53,18 +54,18 @@ public class TaskRowWidget extends Flow {
                 ForemanGui.open(data);
             }
         }));
-        selectBtn.child(false, buildRowContent(task, SELECT_BTN_W));
-        selectBtn.child(true, buildRowContent(task, SELECT_BTN_W));
+        selectBtn.child(false, buildRowContent(task));
+        selectBtn.child(true, buildRowContent(task));
 
         boolean pinned = ForemanClientCache.isPinned(task.id);
         boolean canPin = ForemanClientCache.canPin();
         IDrawable pinIcon;
         if (pinned) {
-            pinIcon = GuiTextures.FAVORITE.withColorOverride(0xFFF0C040);
+            pinIcon = GuiTextures.FAVORITE.withColorOverride(ColorUtils.PIN_ACTIVE.getColor());
         } else if (canPin) {
             pinIcon = GuiTextures.FAVORITE_OUTLINE;
         } else {
-            pinIcon = GuiTextures.FAVORITE_OUTLINE.withColorOverride(0xFF555555);
+            pinIcon = GuiTextures.FAVORITE_OUTLINE.withColorOverride(ColorUtils.PIN_INACTIVE.getColor());
         }
         ButtonWidget<?> pinBtn = new ButtonWidget<>();
         pinBtn.size(PIN_BTN_W, 20);
@@ -88,10 +89,10 @@ public class TaskRowWidget extends Flow {
     private static final int HEAD_SIZE = 8;
     private static final int HEAD_GAP = 2;
 
-    private static Flow buildRowContent(Task task, int width) {
+    private static Flow buildRowContent(Task task) {
         ItemStack stack = IconSlotWidget.parseIconItem(task.iconItem);
         Flow row = Flow.row()
-            .size(width, 20);
+            .size(SELECT_BTN_W, 20);
         int used = 0;
 
         if (stack != null) {
@@ -99,10 +100,10 @@ public class TaskRowWidget extends Flow {
             used += ICON_W;
         }
 
-        String title = truncate(task.title, 22);
+        String title = truncate(task.title);
         int leftPad = stack == null ? TEXT_PAD : 0;
         int assigneeW = assigneeBlockWidth(task);
-        int maxTitleW = width - used - leftPad - assigneeW;
+        int maxTitleW = SELECT_BTN_W - used - leftPad - assigneeW;
         int titlePixelW = Minecraft.getMinecraft().fontRenderer.getStringWidth(title) + 4;
         var titleLabel = new TextWidget<>(title);
         titleLabel.textAlign(Alignment.CenterLeft);
@@ -176,8 +177,8 @@ public class TaskRowWidget extends Flow {
         return null;
     }
 
-    private static String truncate(String s, int max) {
-        return s.length() <= max ? s : s.substring(0, max - 1) + "~";
+    private static String truncate(String s) {
+        return s.length() <= 22 ? s : s.substring(0, 21) + "~";
     }
 
     @SideOnly(Side.CLIENT)

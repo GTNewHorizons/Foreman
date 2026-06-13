@@ -1,6 +1,5 @@
 package com.eldrinn.foreman.network;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -29,7 +28,7 @@ public class OpenGuiPacket implements IPacket {
     }
 
     @Override
-    public void encode(PacketBuffer buf) throws IOException {
+    public void encode(PacketBuffer buf) {
         buf.writeBoolean(taskId != null);
         if (taskId != null) {
             buf.writeLong(taskId.getMostSignificantBits());
@@ -38,7 +37,7 @@ public class OpenGuiPacket implements IPacket {
     }
 
     @Override
-    public void decode(PacketBuffer buf) throws IOException {
+    public void decode(PacketBuffer buf) {
         if (buf.readBoolean()) {
             taskId = new UUID(buf.readLong(), buf.readLong());
         }

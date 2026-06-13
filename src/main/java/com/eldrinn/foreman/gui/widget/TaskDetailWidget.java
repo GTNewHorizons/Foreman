@@ -22,6 +22,7 @@ import com.eldrinn.foreman.data.Subtask;
 import com.eldrinn.foreman.data.Task;
 import com.eldrinn.foreman.data.TaskLocation;
 import com.eldrinn.foreman.data.TaskStatus;
+import com.eldrinn.foreman.gui.ColorUtils;
 import com.eldrinn.foreman.gui.ForemanGui;
 import com.eldrinn.foreman.gui.ForemanGuiData;
 import com.eldrinn.foreman.network.CreateTaskPacket;
@@ -40,8 +41,9 @@ public class TaskDetailWidget extends Flow {
     private static final int EL_H = 20;
     private static final int SCROLLBAR_W = 4;
 
-    private static final UITexture ICON_ADD = GuiTextures.ADD.withColorOverride(0xFF40C040);
-    private static final UITexture ICON_REMOVE = GuiTextures.REMOVE.withColorOverride(0xFFC04040);
+    private static final UITexture ICON_ADD = GuiTextures.ADD.withColorOverride(ColorUtils.ICON_ADD.getColor());
+    private static final UITexture ICON_REMOVE = GuiTextures.REMOVE
+        .withColorOverride(ColorUtils.ICON_REMOVE.getColor());
 
     private final ForemanGuiData data;
     private final Task task;
@@ -131,7 +133,7 @@ public class TaskDetailWidget extends Flow {
         }).size(EL_H, EL_H));
         PlainTextField titleField = new PlainTextField();
         titleField.size(titleW, EL_H);
-        titleField.setTextColor(0xFFFFFF);
+        titleField.setTextColor(ColorUtils.TEXT_WHITE.getColor());
         titleField.value(new StringValue.Dynamic(() -> task.title, val -> {
             task.title = val;
             sendUpdate();
@@ -153,11 +155,11 @@ public class TaskDetailWidget extends Flow {
             boolean canPin = ForemanClientCache.canPin();
             UITexture pinIcon;
             if (pinned) {
-                pinIcon = GuiTextures.FAVORITE.withColorOverride(0xFFF0C040);
+                pinIcon = GuiTextures.FAVORITE.withColorOverride(ColorUtils.PIN_ACTIVE.getColor());
             } else if (canPin) {
                 pinIcon = GuiTextures.FAVORITE_OUTLINE;
             } else {
-                pinIcon = GuiTextures.FAVORITE_OUTLINE.withColorOverride(0xFF555555);
+                pinIcon = GuiTextures.FAVORITE_OUTLINE.withColorOverride(ColorUtils.PIN_INACTIVE.getColor());
             }
             ButtonWidget<?> pinBtn = new ButtonWidget<>();
             pinBtn.size(EL_H, EL_H);
@@ -181,7 +183,7 @@ public class TaskDetailWidget extends Flow {
         formList.child(descLabel);
         PlainTextField descField = new PlainTextField();
         descField.size(W, EL_H);
-        descField.setTextColor(0xFFFFFF);
+        descField.setTextColor(ColorUtils.TEXT_WHITE.getColor());
         descField.value(new StringValue.Dynamic(() -> task.description, val -> {
             task.description = val;
             sendUpdate();
@@ -203,11 +205,11 @@ public class TaskDetailWidget extends Flow {
             var normalLabel = new TextWidget<>(status.displayName());
             normalLabel.size(btnW, EL_H);
             normalLabel.textAlign(Alignment.Center);
-            normalLabel.color(0xFFFFFF);
+            normalLabel.color(ColorUtils.TEXT_WHITE.getColor());
             var activeLabel = new TextWidget<>(status.displayName());
             activeLabel.size(btnW, EL_H);
             activeLabel.textAlign(Alignment.Center);
-            activeLabel.color(0xFFFFFF);
+            activeLabel.color(ColorUtils.TEXT_WHITE.getColor());
             statusRow.child(
                 new ToggleButton().size(btnW, EL_H)
                     .value(new BoolValue.Dynamic(() -> task.status == status, selected -> {
@@ -323,7 +325,7 @@ public class TaskDetailWidget extends Flow {
         row.child(xLabel);
         PlainTextField xField = new PlainTextField();
         xField.size(FIELD_W, EL_H);
-        xField.setTextColor(0xFFFFFF);
+        xField.setTextColor(ColorUtils.TEXT_WHITE.getColor());
         xField.value(new StringValue.Dynamic(() -> String.valueOf(task.location != null ? task.location.x : 0), val -> {
             TaskLocation loc = ensureLocation();
             try {
@@ -343,7 +345,7 @@ public class TaskDetailWidget extends Flow {
         row.child(yLabel);
         PlainTextField yField = new PlainTextField();
         yField.size(FIELD_W, EL_H);
-        yField.setTextColor(0xFFFFFF);
+        yField.setTextColor(ColorUtils.TEXT_WHITE.getColor());
         yField.value(new StringValue.Dynamic(() -> String.valueOf(task.location != null ? task.location.y : 0), val -> {
             TaskLocation loc = ensureLocation();
             try {
@@ -363,7 +365,7 @@ public class TaskDetailWidget extends Flow {
         row.child(zLabel);
         PlainTextField zField = new PlainTextField();
         zField.size(FIELD_W, EL_H);
-        zField.setTextColor(0xFFFFFF);
+        zField.setTextColor(ColorUtils.TEXT_WHITE.getColor());
         zField.value(new StringValue.Dynamic(() -> String.valueOf(task.location != null ? task.location.z : 0), val -> {
             TaskLocation loc = ensureLocation();
             try {
@@ -378,7 +380,7 @@ public class TaskDetailWidget extends Flow {
         var posLabel = new TextWidget<>(t("foreman.gui.detail.pos"));
         posLabel.size(actualPosW, EL_H);
         posLabel.textAlign(Alignment.Center);
-        posLabel.color(0xFFFFFF);
+        posLabel.color(ColorUtils.TEXT_WHITE.getColor());
         row.child(
             new ButtonWidget<>().size(actualPosW, EL_H)
                 .child(posLabel)
@@ -439,7 +441,7 @@ public class TaskDetailWidget extends Flow {
         String[] newTitle = { "" };
         PlainTextField addField = new PlainTextField();
         addField.size(W - EL_H, EL_H);
-        addField.setTextColor(0xFFFFFF);
+        addField.setTextColor(ColorUtils.TEXT_WHITE.getColor());
         addField.autoUpdateOnChange(true);
         addField.value(new StringValue.Dynamic(() -> newTitle[0], val -> newTitle[0] = val));
         col.child(
