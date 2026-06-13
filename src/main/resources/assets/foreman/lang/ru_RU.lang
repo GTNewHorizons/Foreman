@@ -75,27 +75,3 @@ foreman.chat.remind.prefix=[Foreman] %s хочет напомнить вам о 
 foreman.chat.remind.message=  "%s"
 foreman.chat.remind.cooldown=[Foreman] Подождите перед следующим напоминанием.
 foreman.chat.remind.offline=[Foreman] Этот игрок не в сети.
-
-# Colors (override via resource pack)
-color.resource.foreman.textWhite=FFFFFF
-color.resource.foreman.textGray=AAAAAA
-color.resource.foreman.gold=F0C040
-color.resource.foreman.green=8BC34A
-color.resource.foreman.iconAdd=FF40C040
-color.resource.foreman.iconRemove=FFC04040
-color.resource.foreman.pinActive=FFF0C040
-color.resource.foreman.pinInactive=FF555555
-color.resource.foreman.bgHud=88000000
-color.resource.foreman.bgOverlay=44000000
-color.resource.foreman.bgPanel=CC000000
-color.resource.foreman.bgButton=FF444444
-color.resource.foreman.bgDanger=FF884444
-color.resource.foreman.handle=FFCC3333
-color.resource.foreman.mapWaypointOpen=FFAAAA
-color.resource.foreman.mapWaypointInProgress=AAAAFF
-color.resource.foreman.mapWaypointDone=AAFFAA
-color.resource.foreman.mapFillOpen=888800
-color.resource.foreman.mapFillInProgress=004488
-color.resource.foreman.mapFillDone=228822
-color.resource.foreman.mapText=FFFFFFFF
-color.resource.foreman.mapBorder=FFFFFF
