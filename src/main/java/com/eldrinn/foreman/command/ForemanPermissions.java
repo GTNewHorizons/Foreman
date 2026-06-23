@@ -19,6 +19,9 @@ public final class ForemanPermissions {
 
     private static final String SU = "serverutilities";
 
+    /** Cached once: mod set doesn't change after load. */
+    private static final boolean SU_PRESENT = Loader.isModLoaded(SU);
+
     public static final String LIST = "foreman.list";
     public static final String GUI = "foreman.gui";
     public static final String OPEN = "foreman.open";
@@ -30,6 +33,11 @@ public final class ForemanPermissions {
     public static final String IMPORT = "foreman.import";
     public static final String EXPORT = "foreman.export";
 
+    /** Human-readable node descriptions shown in the ServerUtilities rank editor. */
+    private static String describe(String node) {
+        return "Foreman: /foreman " + node.substring(node.indexOf('.') + 1);
+    }
+
     /** Nodes that require OP / explicit ALLOW by default. All others default to ALL. */
     private static boolean isOpByDefault(String node) {
         return RELOAD.equals(node) || IMPORT.equals(node) || EXPORT.equals(node);
@@ -37,9 +45,9 @@ public final class ForemanPermissions {
 
     /** Registers all nodes with ServerUtilities. No-op when SU is absent. Call from init(). */
     public static void registerNodes() {
-        if (!Loader.isModLoaded(SU)) return;
+        if (!SU_PRESENT) return;
         for (String node : new String[] { LIST, GUI, OPEN, CREATE, ASSIGN, UNASSIGN, DONE, RELOAD, IMPORT, EXPORT }) {
-            ForemanPermissionsSU.registerNode(node, isOpByDefault(node), "");
+            ForemanPermissionsSU.registerNode(node, isOpByDefault(node), describe(node));
         }
     }
 
@@ -48,7 +56,7 @@ public final class ForemanPermissions {
      */
     public static boolean has(ICommandSender sender, String node) {
         if (!(sender instanceof EntityPlayerMP player)) return true; // console
-        if (Loader.isModLoaded(SU)) {
+        if (SU_PRESENT) {
             return ForemanPermissionsSU.hasPermission(player, node);
         }
         // Fallback without ServerUtilities.

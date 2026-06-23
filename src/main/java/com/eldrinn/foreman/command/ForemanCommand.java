@@ -186,15 +186,18 @@ public class ForemanCommand extends CommandBase {
                     .anyMatch(
                         ap -> ap.playerId()
                             .equals(target.getUniqueID()));
-                if (!alreadyAssigned) {
-                    task.assignees.add(new AssignedPlayer(target.getUniqueID(), System.currentTimeMillis()));
-                    data.updateTask(senderTeam.getTeamId(), task);
-                    ForemanNetwork.sendToTeamMembers(
-                        senderTeam.getMembers(),
-                        new SyncAllTasksPacket(data.getTeamTasks(senderTeam.getTeamId())));
-                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.assigned_to", args[2], task.title));
-                    target.addChatMessage(new ChatComponentTranslation("foreman.chat.assigned", task.title));
+                if (alreadyAssigned) {
+                    sender.addChatMessage(
+                        new ChatComponentTranslation("foreman.cmd.already_assigned", args[2], task.title));
+                    break;
                 }
+                task.assignees.add(new AssignedPlayer(target.getUniqueID(), System.currentTimeMillis()));
+                data.updateTask(senderTeam.getTeamId(), task);
+                ForemanNetwork.sendToTeamMembers(
+                    senderTeam.getMembers(),
+                    new SyncAllTasksPacket(data.getTeamTasks(senderTeam.getTeamId())));
+                sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.assigned_to", args[2], task.title));
+                target.addChatMessage(new ChatComponentTranslation("foreman.chat.assigned", task.title));
                 break;
             }
             case "unassign": {

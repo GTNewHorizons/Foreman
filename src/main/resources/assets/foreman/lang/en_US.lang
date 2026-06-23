@@ -56,6 +56,7 @@ foreman.cmd.gui_client_only=GUI is client-only.
 foreman.cmd.must_be_player=Must be run by a player.
 foreman.cmd.created=Created task [%s] %s
 foreman.cmd.assigned_to=Assigned %s to %s
+foreman.cmd.already_assigned=%s is already assigned to %s
 foreman.cmd.unassigned_from=Unassigned %s from %s
 foreman.cmd.marked_done=Marked done: %s
 foreman.cmd.exported=Exported %s tasks to %s
