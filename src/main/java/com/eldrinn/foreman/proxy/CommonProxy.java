@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.eldrinn.foreman.command.ForemanCommand;
+import com.eldrinn.foreman.command.ForemanPermissions;
 import com.eldrinn.foreman.event.PlayerLoginHandler;
 import com.eldrinn.foreman.event.PlayerLogoutHandler;
 import com.eldrinn.foreman.event.TeamMergeListener;
@@ -34,6 +35,7 @@ public class CommonProxy {
             .bus()
             .register(new PlayerLogoutHandler());
         MinecraftForge.EVENT_BUS.register(new TeamMergeListener());
+        ForemanPermissions.registerNodes();
     }
 
     public void serverStarting(FMLServerStartingEvent event) {

@@ -50,7 +50,7 @@ foreman.hud.off=OFF
 # Command messages
 foreman.cmd.not_in_team=You are not in a team.
 foreman.cmd.no_tasks=No tasks.
-foreman.cmd.need_op=You need to be OP to use this command.
+foreman.cmd.no_permission=You don't have permission to use this command.
 foreman.cmd.synced=Synced tasks to all online players.
 foreman.cmd.gui_client_only=GUI is client-only.
 foreman.cmd.must_be_player=Must be run by a player.
