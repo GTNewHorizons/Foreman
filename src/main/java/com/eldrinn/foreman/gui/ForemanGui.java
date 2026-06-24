@@ -42,6 +42,10 @@ public class ForemanGui {
     /** Currently active theme id. Persists for the session. */
     private static String currentTheme = THEME_DARK;
 
+    public static boolean isDarkTheme() {
+        return THEME_DARK.equals(currentTheme);
+    }
+
     public static void toggleTheme() {
         currentTheme = THEME_DARK.equals(currentTheme) ? THEME_LIGHT : THEME_DARK;
     }

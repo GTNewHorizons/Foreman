@@ -143,7 +143,7 @@ public class TaskListWidget extends Flow {
                         }))
                 .child(
                     new ButtonWidget<>().size(ICON_BTN_W, ICON_BTN_W)
-                        .overlay(GuiTextures.VISIBLE)
+                        .overlay(ForemanGui.isDarkTheme() ? GuiTextures.SUN : GuiTextures.MOON)
                         .addTooltipLine(StatCollector.translateToLocal("foreman.gui.theme_toggle.tooltip"))
                         .onMousePressed(btn -> {
                             if (btn != 0) return false;
