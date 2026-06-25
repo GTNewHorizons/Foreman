@@ -50,12 +50,13 @@ foreman.hud.off=ВЫКЛ
 # Command messages
 foreman.cmd.not_in_team=Вы не состоите в команде.
 foreman.cmd.no_tasks=Задач нет.
-foreman.cmd.need_op=Для этой команды нужны права OP.
+foreman.cmd.no_permission=У вас нет прав на использование этой команды.
 foreman.cmd.synced=Задачи синхронизированы со всеми онлайн-игроками.
 foreman.cmd.gui_client_only=GUI доступен только на клиенте.
 foreman.cmd.must_be_player=Команда должна быть выполнена игроком.
 foreman.cmd.created=Задача создана [%s] %s
 foreman.cmd.assigned_to=Игрок %s назначен на задачу %s
+foreman.cmd.already_assigned=Игрок %s уже назначен на задачу %s
 foreman.cmd.unassigned_from=Игрок %s снят с задачи %s
 foreman.cmd.marked_done=Отмечено выполненным: %s
 foreman.cmd.exported=Экспортировано %s задач в файл %s

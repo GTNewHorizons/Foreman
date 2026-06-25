@@ -56,18 +56,18 @@ public class ForemanCommand extends CommandBase {
     @Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
         if (args.length == 1) {
-            return CommandBase.getListOfStringsMatchingLastWord(
-                args,
-                "list",
-                "reload",
-                "gui",
-                "create",
-                "assign",
-                "unassign",
-                "done",
-                "export",
-                "import",
-                "open");
+            java.util.List<String> available = new java.util.ArrayList<>();
+            if (ForemanPermissions.has(sender, ForemanPermissions.LIST)) available.add("list");
+            if (ForemanPermissions.has(sender, ForemanPermissions.RELOAD)) available.add("reload");
+            if (ForemanPermissions.has(sender, ForemanPermissions.GUI)) available.add("gui");
+            if (ForemanPermissions.has(sender, ForemanPermissions.CREATE)) available.add("create");
+            if (ForemanPermissions.has(sender, ForemanPermissions.ASSIGN)) available.add("assign");
+            if (ForemanPermissions.has(sender, ForemanPermissions.UNASSIGN)) available.add("unassign");
+            if (ForemanPermissions.has(sender, ForemanPermissions.DONE)) available.add("done");
+            if (ForemanPermissions.has(sender, ForemanPermissions.EXPORT)) available.add("export");
+            if (ForemanPermissions.has(sender, ForemanPermissions.IMPORT)) available.add("import");
+            if (ForemanPermissions.has(sender, ForemanPermissions.OPEN)) available.add("open");
+            return CommandBase.getListOfStringsMatchingLastWord(args, available.toArray(new String[0]));
         }
         return java.util.Collections.emptyList();
     }
@@ -83,6 +83,10 @@ public class ForemanCommand extends CommandBase {
 
         switch (args[0]) {
             case "list": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.LIST)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 Collection<Task> tasks = getSenderTasks(sender, data);
                 if (tasks == null) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.not_in_team"));
@@ -101,8 +105,8 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "reload": {
-                if (!isOp(sender)) {
-                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.need_op"));
+                if (!ForemanPermissions.has(sender, ForemanPermissions.RELOAD)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
                     return;
                 }
                 // Re-sends each online player their team's current task list.
@@ -117,6 +121,10 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "gui": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.GUI)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 if (sender instanceof EntityPlayerMP) {
                     ForemanNetwork.CHANNEL
                         .sendTo(new com.eldrinn.foreman.network.OpenGuiPacket(), (EntityPlayerMP) sender);
@@ -126,6 +134,10 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "create": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.CREATE)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 if (args.length < 2) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.create"));
                     return;
@@ -153,6 +165,10 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "assign": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.ASSIGN)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 if (args.length < 3) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.assign"));
                     return;
@@ -170,18 +186,25 @@ public class ForemanCommand extends CommandBase {
                     .anyMatch(
                         ap -> ap.playerId()
                             .equals(target.getUniqueID()));
-                if (!alreadyAssigned) {
-                    task.assignees.add(new AssignedPlayer(target.getUniqueID(), System.currentTimeMillis()));
-                    data.updateTask(senderTeam.getTeamId(), task);
-                    ForemanNetwork.sendToTeamMembers(
-                        senderTeam.getMembers(),
-                        new SyncAllTasksPacket(data.getTeamTasks(senderTeam.getTeamId())));
-                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.assigned_to", args[2], task.title));
-                    target.addChatMessage(new ChatComponentTranslation("foreman.chat.assigned", task.title));
+                if (alreadyAssigned) {
+                    sender.addChatMessage(
+                        new ChatComponentTranslation("foreman.cmd.already_assigned", args[2], task.title));
+                    break;
                 }
+                task.assignees.add(new AssignedPlayer(target.getUniqueID(), System.currentTimeMillis()));
+                data.updateTask(senderTeam.getTeamId(), task);
+                ForemanNetwork.sendToTeamMembers(
+                    senderTeam.getMembers(),
+                    new SyncAllTasksPacket(data.getTeamTasks(senderTeam.getTeamId())));
+                sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.assigned_to", args[2], task.title));
+                target.addChatMessage(new ChatComponentTranslation("foreman.chat.assigned", task.title));
                 break;
             }
             case "unassign": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.UNASSIGN)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 if (args.length < 3) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.unassign"));
                     return;
@@ -206,6 +229,10 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "done": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.DONE)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 if (args.length < 2) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.done"));
                     return;
@@ -226,6 +253,10 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "export": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.EXPORT)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 Collection<Task> tasks = getSenderTasks(sender, data);
                 if (tasks == null) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.not_in_team"));
@@ -295,6 +326,10 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "import": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.IMPORT)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 if (args.length < 2) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.import"));
                     return;
@@ -386,6 +421,10 @@ public class ForemanCommand extends CommandBase {
                 break;
             }
             case "open": {
+                if (!ForemanPermissions.has(sender, ForemanPermissions.OPEN)) {
+                    sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.no_permission"));
+                    return;
+                }
                 if (args.length < 2) {
                     sender.addChatMessage(new ChatComponentTranslation("foreman.cmd.usage.open"));
                     return;
@@ -424,14 +463,6 @@ public class ForemanCommand extends CommandBase {
         Team team = TeamManager.getTeamByPlayer(((EntityPlayerMP) sender).getUniqueID());
         if (team == null) return null;
         return data.getTeamTasks(team.getTeamId());
-    }
-
-    /** Console sender is always considered OP. */
-    private boolean isOp(ICommandSender sender) {
-        if (!(sender instanceof EntityPlayerMP player)) return true;
-        return MinecraftServer.getServer()
-            .getConfigurationManager()
-            .func_152596_g(player.getGameProfile());
     }
 
     /** Finds a task by the first 8 chars of its UUID. Sends error to sender if not found. */
