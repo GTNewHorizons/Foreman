@@ -14,6 +14,7 @@ foreman.gui.detail.assignees=Assignees:
 foreman.gui.detail.location=Location:
 foreman.gui.detail.subtasks=Subtasks:
 foreman.gui.detail.icon=Icon:
+foreman.gui.detail.icon_hint=Drag an item here from NEI to use as the task icon
 foreman.gui.detail.set_icon=Set to held
 foreman.gui.detail.pos=Pos
 foreman.gui.detail.show_on_map=Show on map:

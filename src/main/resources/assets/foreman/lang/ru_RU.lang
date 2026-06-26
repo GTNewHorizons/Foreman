@@ -14,6 +14,7 @@ foreman.gui.detail.assignees=Исполнители:
 foreman.gui.detail.location=Координаты:
 foreman.gui.detail.subtasks=Подзадачи:
 foreman.gui.detail.icon=Иконка:
+foreman.gui.detail.icon_hint=Перетащите предмет из NEI, чтобы задать иконку задачи
 foreman.gui.detail.set_icon=Взять из руки
 foreman.gui.detail.pos=Поз.
 foreman.gui.detail.show_on_map=На карте:
