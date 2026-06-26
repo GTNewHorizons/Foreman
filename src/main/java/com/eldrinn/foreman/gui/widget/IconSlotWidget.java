@@ -37,6 +37,7 @@ public class IconSlotWidget extends Widget<IconSlotWidget>
     public IconSlotWidget(ItemHolder iconHolder, Runnable onChanged) {
         this.iconHolder = iconHolder;
         this.onChanged = onChanged;
+        tooltip().addLine(net.minecraft.util.StatCollector.translateToLocal("foreman.gui.detail.icon_hint"));
     }
 
     @Override
@@ -64,7 +65,15 @@ public class IconSlotWidget extends Widget<IconSlotWidget>
     @Override
     public void draw(ModularGuiContext context, WidgetThemeEntry<?> widgetTheme) {
         String iconItem = iconHolder.get();
-        if (iconItem == null) return;
+        if (iconItem == null || iconItem.isEmpty()) {
+            // Hint that an NEI item can be dropped here to set a task icon.
+            net.minecraft.client.gui.FontRenderer font = net.minecraft.client.Minecraft.getMinecraft().fontRenderer;
+            String hint = "+";
+            int x = (getArea().width - font.getStringWidth(hint)) / 2;
+            int y = (getArea().height - font.FONT_HEIGHT) / 2;
+            font.drawString(hint, x, y, com.eldrinn.foreman.gui.ColorUtils.TEXT_GRAY.getColor());
+            return;
+        }
         ItemStack stack = parseIconItem(iconItem);
         if (stack == null) return;
         int pad = 1;
